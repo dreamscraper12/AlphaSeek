@@ -5,7 +5,9 @@ import sys
 from pathlib import Path
 
 from portfolio import output
+from portfolio.attribution import build_attribution
 from portfolio.benchmark import ivv_total_return_series, load_distributions, shadow_benchmark_series
+from portfolio.cost_basis import compute_cost_basis
 from portfolio.engine import build_nav_series, external_flows_by_date, inception_start_date
 from portfolio.ledger import Ledger, load_ledger
 from portfolio.metrics import IndexPoint
@@ -41,17 +43,37 @@ def _build_sources(ledger: Ledger, cache_dir: Path) -> tuple[RoutedPriceSource, 
     return price_source, fx_source, twelvedata
 
 
+def _write_empty_outputs(generated_dir: Path) -> None:
+    output.write_json(generated_dir / "nav_daily.json", [])
+    output.write_json(generated_dir / "status.json", output.status_json([]))
+    output.write_json(generated_dir / "benchmark_daily.json", [])
+    output.write_json(generated_dir / "metrics.json", {"portfolio": None, "benchmark": None})
+    output.write_json(generated_dir / "holdings.json", [])
+    output.write_json(generated_dir / "closed_positions.json", [])
+    output.write_json(generated_dir / "attribution.json", [])
+
+
 def _run_build(ledger_dir: Path, cache_dir: Path, generated_dir: Path, benchmark_dir: Path) -> int:
     status = _run_validate(ledger_dir)
     if status != 0:
         return status
 
     ledger = load_ledger(ledger_dir)
+    output.write_json(generated_dir / "trades.json", output.trades_json(ledger))
+
+    start = inception_start_date(ledger)
+    if start is None:
+        _write_empty_outputs(generated_dir)
+        print("No deposit in the ledger yet — wrote empty output.")
+        return 0
+
     price_source, fx_source, ivv_price_source = _build_sources(ledger, cache_dir)
     as_of = latest_closed_business_day()
 
     try:
         nav_series = build_nav_series(ledger, as_of, price_source, fx_source)
+        distributions = load_distributions(benchmark_dir / "ivv_distributions.csv")
+        benchmark_series = ivv_total_return_series(start, as_of, ivv_price_source, distributions)
     except (ValueError, RuntimeError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 1
@@ -59,39 +81,27 @@ def _run_build(ledger_dir: Path, cache_dir: Path, generated_dir: Path, benchmark
     output.write_json(generated_dir / "nav_daily.json", output.nav_daily_json(nav_series))
     output.write_json(generated_dir / "status.json", output.status_json(nav_series))
 
-    start = inception_start_date(ledger)
-    if start is None:
-        output.write_json(generated_dir / "benchmark_daily.json", [])
-        output.write_json(generated_dir / "metrics.json", {"portfolio": None, "benchmark": None})
-        print("No deposit in the ledger yet — wrote empty NAV and benchmark series.")
-        print(
-            "Holdings, closed_positions, trades and attribution (CLAUDE.md section 10) "
-            "still aren't implemented.",
-            file=sys.stderr,
-        )
-        return 0
-
-    try:
-        distributions = load_distributions(benchmark_dir / "ivv_distributions.csv")
-        benchmark_series = ivv_total_return_series(start, as_of, ivv_price_source, distributions)
-    except (ValueError, RuntimeError) as e:
-        print(f"error: {e}", file=sys.stderr)
-        return 1
-
     flows = external_flows_by_date(ledger, fx_source)
     shadow_series = shadow_benchmark_series(flows, benchmark_series, inception_date=start)
-
-    output.write_json(generated_dir / "benchmark_daily.json", output.benchmark_daily_json(shadow_series, benchmark_series))
+    output.write_json(
+        generated_dir / "benchmark_daily.json", output.benchmark_daily_json(shadow_series, benchmark_series)
+    )
 
     portfolio_index_series = [IndexPoint(date=p.date, index=p.index) for p in nav_series]
     output.write_json(generated_dir / "metrics.json", output.metrics_json(portfolio_index_series, benchmark_series))
 
-    print(f"Valued through {nav_series[-1].date} ({len(nav_series)} business days).")
-    print(
-        "Holdings, closed_positions, trades and attribution (CLAUDE.md section 10) "
-        "still aren't implemented.",
-        file=sys.stderr,
+    attribution_rows = build_attribution(ledger, nav_series, fx_source)
+    output.write_json(generated_dir / "attribution.json", output.attribution_json(attribution_rows))
+
+    cost_basis = compute_cost_basis(ledger, as_of, fx_source)
+    latest = nav_series[-1]
+    output.write_json(
+        generated_dir / "holdings.json",
+        output.holdings_json(ledger, latest.nav_aud, latest.valuation.positions, cost_basis, attribution_rows),
     )
+    output.write_json(generated_dir / "closed_positions.json", output.closed_positions_json(ledger, cost_basis))
+
+    print(f"Valued through {latest.date} ({len(nav_series)} business days).")
     return 0
 
 
