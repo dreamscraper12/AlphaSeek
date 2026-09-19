@@ -42,7 +42,7 @@ class TwelveDataSource:
         output_size: int = 90,
     ) -> None:
         self._cache = PriceCache(cache_dir, "twelvedata")
-        self._api_key = api_key if api_key is not None else os.environ["TWELVE_DATA_API_KEY"]
+        self._api_key = api_key if api_key is not None else os.environ.get("TWELVE_DATA_API_KEY")
         self._fetch = fetch
         self._output_size = output_size
 
@@ -58,6 +58,11 @@ class TwelveDataSource:
         return PriceQuote(price=price, currency=currency, as_of=as_of)
 
     def _refresh(self, instrument_id: str) -> None:
+        if not self._api_key:
+            raise RuntimeError(
+                "TWELVE_DATA_API_KEY is not set (see .env.example); needed to price "
+                f"{instrument_id}"
+            )
         symbol, exchange = _split_symbol(instrument_id)
         url = (
             "https://api.twelvedata.com/time_series"

@@ -78,6 +78,7 @@ When a task depends on an unchecked item, stop and ask instead of choosing.
 │   │   ├── manual_marks.csv
 │   │   └── corrections.csv
 │   ├── reconciliation/       # broker statement snapshots, YYYY-MM-DD.csv
+│   ├── benchmark/            # IVV distribution history (owner-maintained, sourced from iShares)
 │   ├── generated/            # pipeline output; committed; never hand-edited
 │   └── cache/                # raw provider data; gitignored
 ├── pipeline/
@@ -140,6 +141,10 @@ Overrides provider data for that instrument and date.
 
 **corrections.csv**
 `date, file, key, change, reason`
+
+**benchmark/ivv_distributions.csv**
+`ex_date, amount_per_unit, currency, source, note`
+IVV's distribution history, used to build the total-return benchmark index (section 9: distributions reinvested on the ex-date). Not part of the ledger — it's reference data about the benchmark instrument, not the owner's own activity — but maintained the same way as a manual mark: real, sourced figures the owner copies in from iShares' published distribution history (never invented; see ground rule 4), each row citing where it came from in `source`.
 
 **reconciliation/YYYY-MM-DD.csv**
 `instrument_id, quantity`, plus `CASH:<CCY>` rows, copied from a broker statement. Instrument IDs, quantities and cash balances only: never account numbers, names, addresses or statement images, because the repo is public.
@@ -408,3 +413,4 @@ Append rows; never delete.
 | 2026-09-19 | Equities/ETFs: Twelve Data                | Free-tier API with a registered key; better reported ASX/global exchange coverage than the alternative considered (Alpha Vantage), which is US-focused and rate-limited to 25 requests/day on the free tier |
 | 2026-09-19 | FX: Frankfurter (ECB reference rates)     | Free, keyless, no signup; confirmed live for both single-date and date-range AUD/USD lookups; no redistribution concern since only derived AUD figures are published |
 | 2026-09-19 | Crypto: CoinGecko                          | Free public API works unauthenticated for current and recent (< 365 day) history, confirmed live; matches section 8's requirement for an AUD quote where available |
+| 2026-09-19 | IVV distribution history: owner-maintained, sourced from iShares | Free APIs don't carry ASX ETF distribution history; iShares publishes it officially. Recorded in `data/benchmark/ivv_distributions.csv`, maintained like a manual mark rather than fetched automatically |
