@@ -94,19 +94,31 @@ def metrics_json(portfolio_series: list[IndexPoint], benchmark_series: list[Inde
     return {"portfolio": portfolio, "benchmark": benchmark}
 
 
-def status_json(series: list[NavPoint]) -> dict:
+def status_json(series: list[NavPoint], inception_deposit_aud: Decimal | None = None) -> dict:
     """Reflects the latest valuation only — a current-state snapshot, not a
-    historical log of every warning ever raised. Cash by currency lives
-    here rather than in a file of its own, since it's the same kind of
-    "as of the last valuation" fact as everything else in this file."""
+    historical log of every warning ever raised. Cash by currency and the
+    inception deposit live here rather than in files of their own, since
+    they're the same kind of "as of the last valuation" fact as everything
+    else in this file. The deposit is here so the site's headline sentence
+    reads it from the ledger instead of hardcoding a figure (ground rule 1)."""
+    deposit = _optional_float(inception_deposit_aud)
     if not series:
-        return {"last_valuation_date": None, "stale_prices": [], "warnings": [], "cash_by_currency": {}}
+        return {
+            "last_valuation_date": None,
+            "inception_date": None,
+            "inception_deposit": deposit,
+            "stale_prices": [],
+            "warnings": [],
+            "cash_by_currency": {},
+        }
     latest = series[-1]
     stale_prices = sorted(
         iv.instrument_id for iv in latest.valuation.positions if iv.stale_business_days > 0
     )
     return {
         "last_valuation_date": latest.date.isoformat(),
+        "inception_date": series[0].date.isoformat(),
+        "inception_deposit": deposit,
         "stale_prices": stale_prices,
         "warnings": latest.valuation.warnings,
         "cash_by_currency": {k: float(v) for k, v in latest.valuation.cash_by_currency.items()},

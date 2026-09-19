@@ -359,9 +359,13 @@ Tokens (`src/styles/tokens.css`):
 Dark mode follows `prefers-color-scheme`, with a manual toggle remembered in `localStorage`.
 
 Type:
-- IBM Plex Sans for UI, headings and tables, with `font-variant-numeric: tabular-nums` on all figures.
+- IBM Plex Sans for UI, headings, labels and table headers.
+- IBM Plex Mono for figures in tables and other data — prices, weights, returns, dates in tables — at 0.9em. Labels stay in Plex Sans, so data reads as data without the page becoming a terminal. This is the one place monospace is used; see the avoid list above.
 - Source Serif 4 for long-form note body text: 18px, line-height 1.6.
 - 16px base for UI, scale ratio 1.25, sentence case everywhere.
+- `font-variant-numeric: tabular-nums` on the body, so any figure outside the mono face still aligns.
+
+Links are ink with a quiet underline, never the accent: the accent belongs to the portfolio's own data, and spending it on navigation would stop it meaning anything.
 
 Formatting:
 - Currency: `A$` for AUD, `US$` for USD. Thousands separators. Percentages to one decimal place.
@@ -414,3 +418,5 @@ Append rows; never delete.
 | 2026-09-19 | FX: Frankfurter (ECB reference rates)     | Free, keyless, no signup; confirmed live for both single-date and date-range AUD/USD lookups; no redistribution concern since only derived AUD figures are published |
 | 2026-09-19 | Crypto: CoinGecko                          | Free public API works unauthenticated for current and recent (< 365 day) history, confirmed live; matches section 8's requirement for an AUD quote where available |
 | 2026-09-19 | IVV distribution history: owner-maintained, sourced from iShares | Free APIs don't carry ASX ETF distribution history; iShares publishes it officially. Recorded in `data/benchmark/ivv_distributions.csv`, maintained like a manual mark rather than fetched automatically |
+| 2026-09-20 | IBM Plex Mono for figures in tables      | Owner chose a deliberately technical read over the plainer alternative. Labels and headings stay in Plex Sans, so the avoid-list bar on monospace for labels still holds |
+| 2026-09-20 | `status.json` carries the inception deposit and date | The home headline ("A$10,000 invested on … is now worth …") was hardcoding the deposit figure, against ground rule 1. It now reads both from the ledger |

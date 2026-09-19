@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EquityCurve from '../components/EquityCurve.astro';
-import { formatDate, formatPercent } from '../lib/format';
+import { formatDate, formatSignedPercent } from '../lib/format';
 import { getNavDaily, getBenchmarkDaily, getMetrics, getAttribution } from '../lib/data';
 import type { PeriodReturns } from '../lib/data';
 
@@ -19,18 +19,28 @@ const PERIODS: { key: keyof PeriodReturns; label: string }[] = [
 ];
 
 function pct(value: number | null): string {
-  return value === null ? '—' : formatPercent(value);
+  return value === null ? '—' : formatSignedPercent(value);
+}
+
+function ratio(value: number | null): string {
+  return value === null ? '—' : value.toFixed(2);
 }
 
 const contributionByInstrument = new Map<string, number>();
 for (const row of attribution) {
-  contributionByInstrument.set(row.instrument_id, (contributionByInstrument.get(row.instrument_id) ?? 0) + row.contribution);
+  contributionByInstrument.set(
+    row.instrument_id,
+    (contributionByInstrument.get(row.instrument_id) ?? 0) + row.contribution,
+  );
 }
 const contributionRows = [...contributionByInstrument.entries()].sort((a, b) => b[1] - a[1]);
 
 function label(instrumentId: string): string {
   return instrumentId === 'CASH_AND_FX' ? 'Cash & FX' : instrumentId;
 }
+
+const portfolio = metrics.portfolio;
+const benchmark = metrics.benchmark;
 ---
 
 <BaseLayout title="Performance">
@@ -40,103 +50,120 @@ function label(instrumentId: string): string {
 
   <h2>Returns</h2>
   {
-    metrics.portfolio === null || metrics.benchmark === null ? (
-      <p>Not enough history yet to compute returns.</p>
+    portfolio === null || benchmark === null ? (
+      <p class="note">Not enough history yet to compute returns.</p>
     ) : (
-      <table class="metrics-table">
-        <thead>
-          <tr>
-            <th scope="col">Period</th>
-            <th scope="col">Portfolio</th>
-            <th scope="col">Benchmark</th>
-          </tr>
-        </thead>
-        <tbody>
-          {PERIODS.map((p) => (
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
             <tr>
-              <td>{p.label}</td>
-              <td>{pct(metrics.portfolio!.returns[p.key])}</td>
-              <td>{pct(metrics.benchmark!.returns[p.key])}</td>
+              <th scope="col">Period</th>
+              <th scope="col">Portfolio (%)</th>
+              <th scope="col">Benchmark (%)</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {PERIODS.map((p) => (
+              <tr>
+                <td>{p.label}</td>
+                <td class="numeric accent">{pct(portfolio.returns[p.key])}</td>
+                <td class="numeric muted">{pct(benchmark.returns[p.key])}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     )
   }
 
   <h2>Risk</h2>
   {
-    metrics.portfolio === null ? (
-      <p>Not enough history yet to compute risk metrics.</p>
+    portfolio === null ? (
+      <p class="note">Not enough history yet to compute risk metrics.</p>
     ) : (
-      <table class="metrics-table">
-        <thead>
-          <tr>
-            <th scope="col">Metric</th>
-            <th scope="col">Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Annualised return</td>
-            <td>{pct(metrics.portfolio.annualised_return)}</td>
-          </tr>
-          <tr>
-            <td>Annualised volatility</td>
-            <td>{pct(metrics.portfolio.annualised_volatility)}</td>
-          </tr>
-          <tr>
-            <td>Current drawdown</td>
-            <td>{pct(metrics.portfolio.current_drawdown)}</td>
-          </tr>
-          <tr>
-            <td>
-              Max drawdown
-              {metrics.portfolio.max_drawdown && (
-                <span class="muted">
-                  {' '}
-                  ({formatDate(metrics.portfolio.max_drawdown.peak_date)} to{' '}
-                  {formatDate(metrics.portfolio.max_drawdown.trough_date)})
-                </span>
-              )}
-            </td>
-            <td>{metrics.portfolio.max_drawdown ? pct(metrics.portfolio.max_drawdown.drawdown) : '—'}</td>
-          </tr>
-          <tr>
-            <td>Beta to benchmark</td>
-            <td>{metrics.portfolio.beta === null ? '—' : metrics.portfolio.beta.toFixed(2)}</td>
-          </tr>
-          <tr>
-            <td>Correlation to benchmark</td>
-            <td>{metrics.portfolio.correlation === null ? '—' : metrics.portfolio.correlation.toFixed(2)}</td>
-          </tr>
-          <tr>
-            <td>Excess return since inception</td>
-            <td>{pct(metrics.portfolio.excess_return)}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Metric</th>
+              <th scope="col">Portfolio</th>
+              <th scope="col">Benchmark</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Annualised return</td>
+              <td class="numeric accent">{pct(portfolio.annualised_return)}</td>
+              <td class="numeric muted">{pct(benchmark?.annualised_return ?? null)}</td>
+            </tr>
+            <tr>
+              <td>Annualised volatility</td>
+              <td class="numeric accent">{pct(portfolio.annualised_volatility)}</td>
+              <td class="numeric muted">{pct(benchmark?.annualised_volatility ?? null)}</td>
+            </tr>
+            <tr>
+              <td>Current drawdown</td>
+              <td class="numeric accent">{pct(portfolio.current_drawdown)}</td>
+              <td class="numeric muted">{pct(benchmark?.current_drawdown ?? null)}</td>
+            </tr>
+            <tr>
+              <td>
+                Max drawdown
+                {portfolio.max_drawdown && (
+                  <span class="when">
+                    {formatDate(portfolio.max_drawdown.peak_date)} to{' '}
+                    {formatDate(portfolio.max_drawdown.trough_date)}
+                  </span>
+                )}
+              </td>
+              <td class="numeric accent">
+                {portfolio.max_drawdown ? pct(portfolio.max_drawdown.drawdown) : '—'}
+              </td>
+              <td class="numeric muted">
+                {benchmark?.max_drawdown ? pct(benchmark.max_drawdown.drawdown) : '—'}
+              </td>
+            </tr>
+            <tr>
+              <td>Beta to benchmark</td>
+              <td class="numeric accent">{ratio(portfolio.beta)}</td>
+              <td class="numeric muted">—</td>
+            </tr>
+            <tr>
+              <td>Correlation to benchmark</td>
+              <td class="numeric accent">{ratio(portfolio.correlation)}</td>
+              <td class="numeric muted">—</td>
+            </tr>
+            <tr>
+              <td>Excess return since inception</td>
+              <td class="numeric accent">{pct(portfolio.excess_return)}</td>
+              <td class="numeric muted">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     )
   }
 
   <h2>Attribution</h2>
-  <p class="muted">Cumulative contribution to return since inception, by holding.</p>
+  <p class="note">Cumulative contribution to return since inception, by holding.</p>
   {
     contributionRows.length === 0 ? (
-      <p>Not enough history yet to compute attribution.</p>
+      <p class="note">Not enough history yet to compute attribution.</p>
     ) : (
-      <table class="metrics-table">
+      <table class="data-table narrow">
         <thead>
           <tr>
             <th scope="col">Holding</th>
-            <th scope="col">Contribution</th>
+            <th scope="col">Contribution (%)</th>
           </tr>
         </thead>
         <tbody>
           {contributionRows.map(([instrumentId, contribution]) => (
             <tr>
               <td>{label(instrumentId)}</td>
-              <td class={contribution < 0 ? 'loss' : 'gain'}>{formatPercent(contribution)}</td>
+              <td class:list={['numeric', contribution < 0 ? 'loss' : 'gain']}>
+                {formatSignedPercent(contribution)}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -144,40 +171,33 @@ function label(instrumentId: string): string {
     )
   }
 
-  <p>
-    Full methodology: see the <a href="/method">Method</a> page.
+  <p class="note">
+    Beta and correlation need at least 60 daily observations. Full methodology: see the{' '}
+    <a href="/method">Method</a> page.
   </p>
 </BaseLayout>
 
 <style>
-  .metrics-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-variant-numeric: tabular-nums;
-  }
-
-  th,
-  td {
-    text-align: right;
-    padding: 0.35rem 0.5rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  th:first-child,
-  td:first-child {
-    text-align: left;
-  }
-
-  .muted {
+  .note {
     color: var(--muted);
-    font-size: 0.875rem;
+    font-size: var(--text-sm);
+    max-width: var(--measure);
   }
 
-  .gain {
-    color: var(--gain);
+  /* The portfolio's own column carries the accent; the benchmark stays
+     neutral grey (CLAUDE.md section 16). */
+  .accent {
+    color: var(--accent);
   }
 
-  .loss {
-    color: var(--loss);
+  .when {
+    display: block;
+    color: var(--muted);
+    font-size: var(--text-sm);
+    white-space: nowrap;
+  }
+
+  .narrow {
+    max-width: 30rem;
   }
 </style>

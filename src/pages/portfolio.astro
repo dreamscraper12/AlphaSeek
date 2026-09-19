@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HoldingsTable from '../components/HoldingsTable.astro';
-import { formatCurrency } from '../lib/format';
+import { formatCurrency, formatSignedCurrency } from '../lib/format';
 import { getHoldings, getClosedPositions, getStatus } from '../lib/data';
 
 const holdings = getHoldings();
@@ -15,13 +15,20 @@ const cashEntries = Object.entries(status.cash_by_currency);
 
   <h2>Open positions</h2>
   <HoldingsTable holdings={holdings} />
+  {
+    status.stale_prices.length > 0 && (
+      <p class="note">
+        Priced from the last available close: {status.stale_prices.join(', ')}.
+      </p>
+    )
+  }
 
   <h2>Cash</h2>
   {
     cashEntries.length === 0 ? (
-      <p>No cash recorded yet.</p>
+      <p class="note">No cash recorded yet.</p>
     ) : (
-      <table class="cash-table">
+      <table class="data-table narrow">
         <thead>
           <tr>
             <th scope="col">Currency</th>
@@ -32,7 +39,9 @@ const cashEntries = Object.entries(status.cash_by_currency);
           {cashEntries.map(([currency, amount]) => (
             <tr>
               <td>{currency}</td>
-              <td>{formatCurrency(amount, currency === 'USD' ? 'USD' : 'AUD')}</td>
+              <td class="numeric">
+                {formatCurrency(amount, currency === 'USD' ? 'USD' : 'AUD')}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -41,59 +50,60 @@ const cashEntries = Object.entries(status.cash_by_currency);
   }
 
   <h2>Closed positions</h2>
-  {
-    closed.length === 0 ? (
-      <p>No closed positions yet.</p>
-    ) : (
-      <table class="closed-table">
-        <thead>
-          <tr>
-            <th scope="col">Instrument</th>
-            <th scope="col">Type</th>
-            <th scope="col">Realised P&L (A$)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {closed.map((c) => (
+  <p class="note">Closed and losing positions stay here permanently.</p>
+  <div class="table-scroll">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th scope="col">Instrument</th>
+          <th scope="col">Type</th>
+          <th scope="col">Realised P&L (A$)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          closed.map((c) => (
             <tr>
               <td>
-                {c.note_slug ? <a href={`/research/${c.note_slug}`}>{c.instrument_id}</a> : c.instrument_id}
+                {c.note_slug ? (
+                  <a href={`/research/${c.note_slug}`}>{c.instrument_id}</a>
+                ) : (
+                  c.instrument_id
+                )}
               </td>
-              <td>{c.type}</td>
-              <td class={c.realised_pnl < 0 ? 'loss' : 'gain'}>{formatCurrency(c.realised_pnl, 'AUD')}</td>
+              <td class="type">{c.type}</td>
+              <td class:list={['numeric', c.realised_pnl < 0 ? 'loss' : 'gain']}>
+                {formatSignedCurrency(c.realised_pnl, 'AUD')}
+              </td>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    )
-  }
+          ))
+        }
+        {
+          closed.length === 0 && (
+            <tr>
+              <td class="empty" colspan="3">
+                No closed positions yet.
+              </td>
+            </tr>
+          )
+        }
+      </tbody>
+    </table>
+  </div>
 </BaseLayout>
 
 <style>
-  .cash-table,
-  .closed-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-variant-numeric: tabular-nums;
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
   }
 
-  th,
-  td {
-    text-align: right;
-    padding: 0.35rem 0.5rem;
-    border-bottom: 1px solid var(--rule);
+  .type {
+    color: var(--muted);
+    font-size: var(--text-sm);
   }
 
-  th:first-child,
-  td:first-child {
-    text-align: left;
-  }
-
-  .gain {
-    color: var(--gain);
-  }
-
-  .loss {
-    color: var(--loss);
+  .narrow {
+    max-width: 24rem;
   }
 </style>

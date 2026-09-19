@@ -31,6 +31,25 @@ def inception_start_date(ledger: Ledger) -> date | None:
     return min(deposit_dates) if deposit_dates else None
 
 
+def inception_deposit_aud(ledger: Ledger, fx_source: FxRateSource) -> Decimal | None:
+    """The deposit(s) on or before the inception date, in AUD — the "prior
+    close" baseline the index starts from (CLAUDE.md section 9), and the
+    figure the site's headline sentence is built on."""
+    start = inception_start_date(ledger)
+    if start is None:
+        return None
+
+    total = Decimal(0)
+    for c in ledger.cashflows:
+        if c.type != "DEPOSIT" or c.date > start:
+            continue
+        rate = rate_with_carry_forward(fx_source, c.currency, "AUD", start)
+        if rate is None:
+            raise ValueError(f"missing FX rate {c.currency}->AUD on {start}, no fallback available")
+        total += c.amount * rate
+    return total
+
+
 def external_flow_aud(ledger: Ledger, as_of: date, fx_source: FxRateSource) -> Decimal:
     """Net deposits minus withdrawals on exactly this date, converted to AUD."""
     total = Decimal(0)
@@ -62,14 +81,7 @@ def build_nav_series(
     # baseline NAV (CLAUDE.md section 9): the first day's return is
     # NAV_D0 / deposit - 1, so that flow isn't also counted as a same-day
     # external flow below.
-    previous_nav = sum(
-        (
-            c.amount * rate_with_carry_forward(fx_source, c.currency, "AUD", start)
-            for c in ledger.cashflows
-            if c.type == "DEPOSIT" and c.date <= start
-        ),
-        Decimal(0),
-    )
+    previous_nav = inception_deposit_aud(ledger, fx_source)
 
     rows: list[tuple[date, DailyValuation, Decimal]] = []
     for d in business_days(start, as_of):

@@ -10,35 +10,55 @@ const notes = (await getCollection('notes')).sort(
 
 <BaseLayout title="Research">
   <h1>Research</h1>
+  <p class="note">
+    What I own and why, newest first. Every note discloses where AI helped and where the
+    judgement was mine.
+  </p>
+
   <ul class="notes-list">
     {
       notes.map((note) => (
         <li>
           <a href={`/research/${note.id}`}>{note.data.title}</a>
           <span class="meta">
-            {formatDate(note.data.published_at)} — {note.data.status}
+            <span class="when">{formatDate(note.data.published_at)}</span>
+            <span class="status">{note.data.status}</span>
           </span>
         </li>
       ))
     }
-    {notes.length === 0 && <li>No notes published yet.</li>}
+    {notes.length === 0 && <li class="muted">No notes published yet.</li>}
   </ul>
 </BaseLayout>
 
 <style>
+  .note {
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+
   .notes-list {
     list-style: none;
     padding: 0;
+    margin: 0;
+    max-width: var(--measure);
   }
 
   .notes-list li {
-    padding: 0.75rem 0;
+    padding: var(--space-3) 0;
     border-bottom: 1px solid var(--rule);
   }
 
   .meta {
-    display: block;
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-1);
     color: var(--muted);
-    font-size: 0.8125rem;
+    font-size: var(--text-sm);
+  }
+
+  .when {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
   }
 </style>

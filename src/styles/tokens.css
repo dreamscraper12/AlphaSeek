@@ -1,4 +1,12 @@
+/* Design tokens and base styles. See CLAUDE.md section 16.
+   Kept as one file so there is a single place to look: tokens first, then
+   the element defaults and the two shared patterns (data tables, prose)
+   that every page builds from. */
+
 :root {
+  /* Colour. The accent is reserved for the portfolio's own data — its
+     line, its figures in comparisons — so links and UI chrome never use
+     it, or it stops meaning anything. */
   --bg: #fcfcfd;
   --ink: #16202e;
   --muted: #5e6875;
@@ -8,10 +16,29 @@
   --loss: #b42318;
 
   --font-ui: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
   --font-serif: 'Source Serif 4', Georgia, serif;
+
+  /* 16px base, 1.25 ratio. */
+  --text-sm: 0.8rem;
+  --text-base: 1rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.5625rem;
+  --text-xl: 1.9531rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
 
   --measure: 68ch;
   --table-max: 1040px;
+
+  --hover-tint: color-mix(in srgb, var(--ink) 4%, transparent);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -42,6 +69,7 @@
 
 html {
   font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -49,11 +77,160 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: 1.5;
   font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* Headings: sentence case, tight, with room above rather than below so
+   sections read as blocks. */
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.011em;
+  max-width: var(--measure);
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-5);
+}
+
+h2 {
+  font-size: var(--text-md);
+  margin-top: var(--space-7);
+  margin-bottom: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--rule);
+}
+
+h3 {
+  font-size: var(--text-base);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-2);
+}
+
+p {
+  margin: 0 0 var(--space-4);
+  max-width: var(--measure);
+}
+
+/* Links are ink with a quiet underline. Colour is not used to mark them,
+   because the accent belongs to the data. */
 a {
   color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+  text-decoration-color: var(--rule);
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+/* Figures are monospaced so columns line up and data reads as data.
+   Labels stay in the UI face. */
+.numeric,
+.data-table td.numeric,
+.data-table th.numeric {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  letter-spacing: -0.01em;
+}
+
+.gain {
+  color: var(--gain);
+}
+
+.loss {
+  color: var(--loss);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* Shared table treatment. Hairline rules, units in the header, numbers
+   right-aligned; the first column is the label and stays left. */
+.data-table {
+  width: 100%;
+  max-width: var(--table-max);
+  border-collapse: collapse;
+  margin: 0 0 var(--space-4);
+}
+
+.data-table th,
+.data-table td {
+  text-align: right;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+.data-table th {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--muted);
+  border-bottom-color: var(--ink);
+  letter-spacing: 0.005em;
+}
+
+.data-table th:first-child,
+.data-table td:first-child {
+  text-align: left;
+  white-space: normal;
+}
+
+.data-table tbody tr:hover {
+  background: var(--hover-tint);
+}
+
+.data-table td.empty {
+  text-align: left;
+  color: var(--muted);
+  white-space: normal;
+}
+
+/* Wide tables scroll rather than squash, down to 360px. */
+.table-scroll {
+  overflow-x: auto;
+  margin-bottom: var(--space-4);
+}
+
+/* Long-form reading: notes, method, about, disclaimer. */
+.prose {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  max-width: var(--measure);
+}
+
+.prose h2 {
+  font-family: var(--font-ui);
+}
+
+.prose h3 {
+  font-family: var(--font-ui);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {

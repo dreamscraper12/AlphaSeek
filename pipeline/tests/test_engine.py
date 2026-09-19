@@ -1,7 +1,7 @@
 from datetime import date
 from decimal import Decimal
 
-from portfolio.engine import build_nav_series
+from portfolio.engine import build_nav_series, inception_deposit_aud
 from portfolio.ledger import Cashflow, Instrument, Ledger, Trade
 from portfolio.performance import chain_link, daily_return
 from portfolio.sources import PriceQuote
@@ -72,6 +72,22 @@ def test_no_deposit_means_no_series():
     prices = _FixedPriceSource({})
     fx = _FixedFxSource()
     assert build_nav_series(ledger, date(2026, 1, 6), prices, fx) == []
+
+
+def test_inception_deposit_sums_every_currency_at_the_inception_date():
+    ledger = _ledger(
+        cashflows=[
+            Cashflow(date=date(2026, 1, 5), type="DEPOSIT", amount=Decimal("10000.00"), currency="AUD"),
+            Cashflow(date=date(2026, 1, 5), type="DEPOSIT", amount=Decimal("1000.00"), currency="USD"),
+            # A later top-up is not part of the inception baseline.
+            Cashflow(date=date(2026, 2, 2), type="DEPOSIT", amount=Decimal("5000.00"), currency="AUD"),
+        ]
+    )
+    assert inception_deposit_aud(ledger, _FixedFxSource(Decimal("1.5"))) == Decimal("11500.00")
+
+
+def test_inception_deposit_is_none_without_a_deposit():
+    assert inception_deposit_aud(_ledger(), _FixedFxSource()) is None
 
 
 def test_first_day_return_uses_the_deposit_as_the_prior_close():

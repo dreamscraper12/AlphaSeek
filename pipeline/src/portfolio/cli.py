@@ -8,7 +8,12 @@ from portfolio import output
 from portfolio.attribution import build_attribution
 from portfolio.benchmark import ivv_total_return_series, load_distributions, shadow_benchmark_series
 from portfolio.cost_basis import compute_cost_basis
-from portfolio.engine import build_nav_series, external_flows_by_date, inception_start_date
+from portfolio.engine import (
+    build_nav_series,
+    external_flows_by_date,
+    inception_deposit_aud,
+    inception_start_date,
+)
 from portfolio.ledger import Ledger, load_ledger
 from portfolio.metrics import IndexPoint
 from portfolio.schedule import latest_closed_business_day
@@ -78,8 +83,9 @@ def _run_build(ledger_dir: Path, cache_dir: Path, generated_dir: Path, benchmark
         print(f"error: {e}", file=sys.stderr)
         return 1
 
+    deposit = inception_deposit_aud(ledger, fx_source)
     output.write_json(generated_dir / "nav_daily.json", output.nav_daily_json(nav_series))
-    output.write_json(generated_dir / "status.json", output.status_json(nav_series))
+    output.write_json(generated_dir / "status.json", output.status_json(nav_series, deposit))
 
     flows = external_flows_by_date(ledger, fx_source)
     shadow_series = shadow_benchmark_series(flows, benchmark_series, inception_date=start)

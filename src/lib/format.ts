@@ -1,19 +1,46 @@
 const MINUS = '−';
 
-export function formatCurrency(amount: number, currency: 'AUD' | 'USD'): string {
-  const symbol = currency === 'AUD' ? 'A$' : 'US$';
-  const sign = amount < 0 ? MINUS : '';
-  const value = Math.abs(amount).toLocaleString('en-AU', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-  return `${sign}${symbol}${value}`;
+function sign(value: number, forceSign: boolean): string {
+  if (value < 0) return MINUS;
+  // Section 16: gains and losses always carry a sign, so the figure reads
+  // correctly without relying on colour. An exact zero is neither.
+  return forceSign && value > 0 ? '+' : '';
 }
 
+function currencySymbol(currency: 'AUD' | 'USD'): string {
+  return currency === 'AUD' ? 'A$' : 'US$';
+}
+
+function amount(value: number, decimals: number): string {
+  return Math.abs(value).toLocaleString('en-AU', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+}
+
+/** Absolute money: prices, balances, per-unit figures. */
+export function formatCurrency(value: number, currency: 'AUD' | 'USD'): string {
+  return `${sign(value, false)}${currencySymbol(currency)}${amount(value, 2)}`;
+}
+
+/** Portfolio-scale money, where cents are noise: the headline, the curve. */
+export function formatCurrencyWhole(value: number, currency: 'AUD' | 'USD'): string {
+  return `${sign(value, false)}${currencySymbol(currency)}${amount(value, 0)}`;
+}
+
+/** Money that represents a gain or loss, so it always carries a sign. */
+export function formatSignedCurrency(value: number, currency: 'AUD' | 'USD'): string {
+  return `${sign(value, true)}${currencySymbol(currency)}${amount(value, 2)}`;
+}
+
+/** A plain proportion, such as a position weight. */
 export function formatPercent(fraction: number): string {
-  const sign = fraction < 0 ? MINUS : '';
-  const value = Math.abs(fraction * 100).toFixed(1);
-  return `${sign}${value}%`;
+  return `${sign(fraction, false)}${Math.abs(fraction * 100).toFixed(1)}%`;
+}
+
+/** A return or contribution, so it always carries a sign. */
+export function formatSignedPercent(fraction: number): string {
+  return `${sign(fraction, true)}${Math.abs(fraction * 100).toFixed(1)}%`;
 }
 
 export function formatDate(date: Date | string): string {

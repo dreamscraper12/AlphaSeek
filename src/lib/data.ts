@@ -84,6 +84,8 @@ export interface Metrics {
 
 export interface Status {
   last_valuation_date: string | null;
+  inception_date: string | null;
+  inception_deposit: number | null;
   stale_prices: string[];
   warnings: string[];
   cash_by_currency: Record<string, number>;

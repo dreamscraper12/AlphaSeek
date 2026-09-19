@@ -59,9 +59,11 @@ def test_status_json_reflects_only_the_latest_day():
         NavPoint(date=date(2026, 1, 6), nav_aud=Decimal("11650"), index=Decimal("10130"),
                   valuation=_valuation(warnings=["today's warning"], positions=[stale_position])),
     ]
-    status = status_json(series)
+    status = status_json(series, Decimal("10000"))
     assert status == {
         "last_valuation_date": "2026-01-06",
+        "inception_date": "2026-01-05",
+        "inception_deposit": 10000.0,
         "stale_prices": ["TEST:AAA"],
         "warnings": ["today's warning"],
         "cash_by_currency": {"AUD": 10000.0},
@@ -70,7 +72,12 @@ def test_status_json_reflects_only_the_latest_day():
 
 def test_status_json_empty_series():
     assert status_json([]) == {
-        "last_valuation_date": None, "stale_prices": [], "warnings": [], "cash_by_currency": {},
+        "last_valuation_date": None,
+        "inception_date": None,
+        "inception_deposit": None,
+        "stale_prices": [],
+        "warnings": [],
+        "cash_by_currency": {},
     }
 
 

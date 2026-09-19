@@ -1,5 +1,7 @@
 {
   "last_valuation_date": null,
+  "inception_date": null,
+  "inception_deposit": null,
   "stale_prices": [],
   "warnings": [],
   "cash_by_currency": {}

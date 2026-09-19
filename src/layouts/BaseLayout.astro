@@ -1,14 +1,20 @@
 ---
 import '@fontsource/ibm-plex-sans/400.css';
 import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/source-serif-4/400.css';
 import '../styles/tokens.css';
+import { formatDate } from '../lib/format';
+import { getStatus } from '../lib/data';
 
 interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
+const status = getStatus();
+
+const REPO_URL = 'https://github.com/dreamscraper12/AlphaSeek';
 
 const nav = [
   { href: '/portfolio', label: 'Portfolio' },
@@ -17,6 +23,8 @@ const nav = [
   { href: '/journal', label: 'Journal' },
   { href: '/method', label: 'Method' },
 ];
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
 <!doctype html>
@@ -33,68 +41,128 @@ const nav = [
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <a class="site-name" href="/">Portfolio</a>
-      <nav>
-        {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      <nav aria-label="Primary">
+        {
+          nav.map((item) => (
+            <a
+              href={item.href}
+              class:list={['nav-link', { current: path === item.href }]}
+              aria-current={path === item.href ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ))
+        }
       </nav>
     </header>
-    <main>
+    <main id="main">
       <slot />
     </main>
     <footer class="site-footer">
-      <p>
+      <p class="disclaimer">
         General information only, not personal advice. This site isn't provided under an
         Australian financial services licence. I own the investments discussed. High risk.
         <a href="/disclaimer">Full disclaimer</a>
       </p>
-      <p>
-        <a href="/">View the ledger</a>
+      <p class="meta">
+        <span>
+          Last valued {
+            status.last_valuation_date ? formatDate(status.last_valuation_date) : 'not yet run'
+          }
+        </span>
+        <a href={REPO_URL}>View the ledger</a>
       </p>
     </footer>
   </body>
 </html>
 
 <style>
-  .site-header,
-  .site-footer {
-    max-width: var(--table-max);
-    margin: 0 auto;
-    padding: 1rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--rule);
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: var(--space-2);
+    background: var(--bg);
+    color: var(--ink);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--rule);
   }
 
-  .site-footer {
-    border-bottom: none;
-    border-top: 1px solid var(--rule);
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    color: var(--muted);
-    font-size: 0.875rem;
+  .skip-link:focus {
+    left: var(--space-4);
+    z-index: 1;
+  }
+
+  .site-header {
+    max-width: var(--table-max);
+    margin: 0 auto;
+    padding: var(--space-4);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--space-3);
+    border-bottom: 1px solid var(--rule);
   }
 
   .site-name {
     font-weight: 600;
+    letter-spacing: -0.015em;
     text-decoration: none;
   }
 
   nav {
     display: flex;
-    gap: 1.25rem;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    font-size: var(--text-sm);
   }
 
-  nav a {
+  .nav-link {
+    color: var(--muted);
     text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid transparent;
+  }
+
+  .nav-link:hover {
     color: var(--ink);
+  }
+
+  .nav-link.current {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
   }
 
   main {
     max-width: var(--table-max);
     margin: 0 auto;
-    padding: 1.5rem 1rem 3rem;
+    padding: var(--space-7) var(--space-4) var(--space-8);
+  }
+
+  .site-footer {
+    max-width: var(--table-max);
+    margin: 0 auto;
+    padding: var(--space-4) var(--space-4) var(--space-7);
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: var(--text-sm);
+  }
+
+  .site-footer p {
+    margin: 0 0 var(--space-2);
+  }
+
+  .disclaimer {
+    max-width: var(--measure);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3);
   }
 </style>

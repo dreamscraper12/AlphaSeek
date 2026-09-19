@@ -1,5 +1,5 @@
 ---
-import { formatCurrency, formatPercent } from '../lib/format';
+import { formatCurrency, formatPercent, formatSignedPercent } from '../lib/format';
 import type { Holding } from '../lib/data';
 
 interface Props {
@@ -10,71 +10,68 @@ interface Props {
 }
 
 const { holdings, compact = false } = Astro.props;
-const columnCount = compact ? 3 : 6;
+const columnCount = compact ? 3 : 7;
 ---
 
-<table class="holdings-table">
-  <thead>
-    <tr>
-      <th scope="col">Instrument</th>
-      {!compact && <th scope="col">Type</th>}
-      <th scope="col">Weight</th>
-      {!compact && <th scope="col">Avg cost (A$)</th>}
-      {!compact && <th scope="col">Price (A$)</th>}
-      <th scope="col">Return</th>
-      {!compact && <th scope="col">Contribution</th>}
-    </tr>
-  </thead>
-  <tbody>
-    {
-      holdings.map((h) => (
-        <tr>
-          <td>
-            {h.note_slug ? <a href={`/research/${h.note_slug}`}>{h.instrument_id}</a> : h.instrument_id}
-          </td>
-          {!compact && <td>{h.type}</td>}
-          <td class={h.weight < 0 ? 'loss' : ''}>{formatPercent(h.weight)}</td>
-          {!compact && <td>{formatCurrency(h.average_cost, 'AUD')}</td>}
-          {!compact && <td>{formatCurrency(h.price, 'AUD')}</td>}
-          <td class={h.return < 0 ? 'loss' : 'gain'}>{formatPercent(h.return)}</td>
-          {!compact && <td class={h.contribution < 0 ? 'loss' : 'gain'}>{formatPercent(h.contribution)}</td>}
-        </tr>
-      ))
-    }
-    {
-      holdings.length === 0 && (
-        <tr>
-          <td colspan={columnCount}>No open positions yet.</td>
-        </tr>
-      )
-    }
-  </tbody>
-</table>
+<div class="table-scroll">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th scope="col">Instrument</th>
+        {!compact && <th scope="col">Type</th>}
+        <th scope="col">Weight (%)</th>
+        {!compact && <th scope="col">Avg cost (A$)</th>}
+        {!compact && <th scope="col">Price (A$)</th>}
+        <th scope="col">Return (%)</th>
+        {!compact && <th scope="col">Contribution (%)</th>}
+      </tr>
+    </thead>
+    <tbody>
+      {
+        holdings.map((h) => (
+          <tr>
+            <td>
+              {h.note_slug ? (
+                <a href={`/research/${h.note_slug}`}>{h.instrument_id}</a>
+              ) : (
+                h.instrument_id
+              )}
+            </td>
+            {!compact && <td class="type">{h.type}</td>}
+            <td class="numeric">{formatPercent(h.weight)}</td>
+            {!compact && <td class="numeric">{formatCurrency(h.average_cost, 'AUD')}</td>}
+            {!compact && <td class="numeric">{formatCurrency(h.price, 'AUD')}</td>}
+            <td class:list={['numeric', h.return < 0 ? 'loss' : 'gain']}>
+              {formatSignedPercent(h.return)}
+            </td>
+            {!compact && (
+              <td class:list={['numeric', h.contribution < 0 ? 'loss' : 'gain']}>
+                {formatSignedPercent(h.contribution)}
+              </td>
+            )}
+          </tr>
+        ))
+      }
+      {
+        holdings.length === 0 && (
+          <tr>
+            <td class="empty" colspan={columnCount}>
+              No open positions yet.
+            </td>
+          </tr>
+        )
+      }
+    </tbody>
+  </table>
+</div>
 
 <style>
-  .holdings-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-variant-numeric: tabular-nums;
+  .type {
+    color: var(--muted);
+    font-size: var(--text-sm);
   }
 
-  th,
-  td {
-    text-align: right;
-    padding: 0.35rem 0.5rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  th:first-child,
-  td:first-child {
-    text-align: left;
-  }
-
-  .gain {
-    color: var(--gain);
-  }
-
-  .loss {
-    color: var(--loss);
+  td a {
+    text-decoration-color: var(--rule);
   }
 </style>

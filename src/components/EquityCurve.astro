@@ -1,5 +1,5 @@
 ---
-import { formatCurrency, formatDate } from '../lib/format';
+import { formatCurrencyWhole, formatDate } from '../lib/format';
 import type { NavPoint } from '../lib/data';
 
 interface Props {
@@ -20,31 +20,41 @@ const chartData = JSON.stringify({ portfolio, benchmark });
       <p class="empty">Not enough history yet to draw a chart.</p>
     )
   }
+
   <figcaption>
-    <table>
-      <caption class="visually-hidden">Portfolio value versus benchmark, by date</caption>
-      <thead>
-        <tr>
-          <th scope="col">Date</th>
-          <th scope="col">Portfolio (A$)</th>
-          <th scope="col">Benchmark (A$)</th>
-        </tr>
-      </thead>
-      <tbody>
-        {portfolio.map((p, i) => (
-          <tr>
-            <td>{formatDate(p.date)}</td>
-            <td>{formatCurrency(p.nav, 'AUD')}</td>
-            <td>{benchmark[i] ? formatCurrency(benchmark[i].nav, 'AUD') : '—'}</td>
-          </tr>
-        ))}
-        {portfolio.length === 0 && (
-          <tr>
-            <td colspan="3">No valuation history yet.</td>
-          </tr>
-        )}
-      </tbody>
-    </table>
+    <details>
+      <summary>Table of values</summary>
+      <div class="table-scroll">
+        <table class="data-table">
+          <caption class="visually-hidden">Portfolio value versus benchmark, by date</caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Portfolio (A$)</th>
+              <th scope="col">Benchmark (A$)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {portfolio.map((p, i) => (
+              <tr>
+                <td>{formatDate(p.date)}</td>
+                <td class="numeric accent">{formatCurrencyWhole(p.nav, 'AUD')}</td>
+                <td class="numeric muted">
+                  {benchmark[i] ? formatCurrencyWhole(benchmark[i].nav, 'AUD') : '—'}
+                </td>
+              </tr>
+            ))}
+            {portfolio.length === 0 && (
+              <tr>
+                <td class="empty" colspan="3">
+                  No valuation history yet.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </details>
   </figcaption>
 </figure>
 
@@ -60,17 +70,25 @@ const chartData = JSON.stringify({ portfolio, benchmark });
     };
 
     const x = portfolio.map((p) => new Date(p.date).getTime() / 1000);
-    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent');
-    const muted = getComputedStyle(document.documentElement).getPropertyValue('--muted');
+    const styles = getComputedStyle(document.documentElement);
+    const accent = styles.getPropertyValue('--accent').trim() || '#2346a0';
+    const muted = styles.getPropertyValue('--muted').trim() || '#5e6875';
+    const rule = styles.getPropertyValue('--rule').trim() || '#e2e5ea';
 
     new uPlot(
       {
         width: el.clientWidth || 640,
-        height: 320,
+        height: 300,
+        padding: [8, 8, 0, 0],
+        legend: { show: false },
+        axes: [
+          { stroke: muted, grid: { stroke: rule, width: 1 }, ticks: { stroke: rule } },
+          { stroke: muted, grid: { stroke: rule, width: 1 }, ticks: { stroke: rule } },
+        ],
         series: [
           {},
-          { label: 'Portfolio', stroke: accent.trim() || '#2346a0' },
-          { label: 'Benchmark', stroke: muted.trim() || '#5e6875' },
+          { label: 'Portfolio', stroke: accent, width: 1.75 },
+          { label: 'Benchmark', stroke: muted, width: 1.25, dash: [3, 3] },
         ],
       },
       [x, portfolio.map((p) => p.nav), benchmark.map((p) => p.nav)],
@@ -80,33 +98,37 @@ const chartData = JSON.stringify({ portfolio, benchmark });
 </script>
 
 <style>
+  .equity-curve {
+    margin: 0;
+  }
+
   .empty {
     color: var(--muted);
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-variant-numeric: tabular-nums;
-  }
-
-  th,
-  td {
-    text-align: right;
-    padding: 0.35rem 0.5rem;
+    font-size: var(--text-sm);
+    padding: var(--space-6) 0;
+    border-top: 1px solid var(--rule);
     border-bottom: 1px solid var(--rule);
   }
 
-  th:first-child,
-  td:first-child {
-    text-align: left;
+  figcaption {
+    margin-top: var(--space-3);
   }
 
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
+  summary {
+    color: var(--muted);
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+
+  summary:hover {
+    color: var(--ink);
+  }
+
+  details[open] summary {
+    margin-bottom: var(--space-3);
+  }
+
+  .accent {
+    color: var(--accent);
   }
 </style>
