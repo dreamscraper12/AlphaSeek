@@ -96,9 +96,11 @@ def metrics_json(portfolio_series: list[IndexPoint], benchmark_series: list[Inde
 
 def status_json(series: list[NavPoint]) -> dict:
     """Reflects the latest valuation only — a current-state snapshot, not a
-    historical log of every warning ever raised."""
+    historical log of every warning ever raised. Cash by currency lives
+    here rather than in a file of its own, since it's the same kind of
+    "as of the last valuation" fact as everything else in this file."""
     if not series:
-        return {"last_valuation_date": None, "stale_prices": [], "warnings": []}
+        return {"last_valuation_date": None, "stale_prices": [], "warnings": [], "cash_by_currency": {}}
     latest = series[-1]
     stale_prices = sorted(
         iv.instrument_id for iv in latest.valuation.positions if iv.stale_business_days > 0
@@ -107,11 +109,13 @@ def status_json(series: list[NavPoint]) -> dict:
         "last_valuation_date": latest.date.isoformat(),
         "stale_prices": stale_prices,
         "warnings": latest.valuation.warnings,
+        "cash_by_currency": {k: float(v) for k, v in latest.valuation.cash_by_currency.items()},
     }
 
 
 def trades_json(ledger: Ledger) -> list[dict]:
     """Newest first, per CLAUDE.md section 13 (/journal)."""
+    instruments_by_id = {i.instrument_id: i for i in ledger.instruments}
     return [
         {
             "trade_id": t.trade_id,
@@ -120,6 +124,7 @@ def trades_json(ledger: Ledger) -> list[dict]:
             "side": t.side,
             "quantity": float(t.quantity),
             "price": float(t.price),
+            "currency": instruments_by_id[t.instrument_id].currency,
             "note_slug": t.note_slug,
         }
         for t in sorted(ledger.trades, key=lambda t: t.executed_at, reverse=True)

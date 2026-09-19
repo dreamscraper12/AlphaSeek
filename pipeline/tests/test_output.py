@@ -64,11 +64,14 @@ def test_status_json_reflects_only_the_latest_day():
         "last_valuation_date": "2026-01-06",
         "stale_prices": ["TEST:AAA"],
         "warnings": ["today's warning"],
+        "cash_by_currency": {"AUD": 10000.0},
     }
 
 
 def test_status_json_empty_series():
-    assert status_json([]) == {"last_valuation_date": None, "stale_prices": [], "warnings": []}
+    assert status_json([]) == {
+        "last_valuation_date": None, "stale_prices": [], "warnings": [], "cash_by_currency": {},
+    }
 
 
 def test_write_json_creates_parent_directories(tmp_path):
@@ -149,6 +152,7 @@ def test_trades_json_is_newest_first():
     rows = trades_json(ledger)
     assert [r["trade_id"] for r in rows] == ["T2", "T1"]
     assert rows[0]["note_slug"] == "why-i-own-aaa"
+    assert rows[0]["currency"] == "USD"
 
 
 def test_holdings_json_computes_weight_return_and_contribution():

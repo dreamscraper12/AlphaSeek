@@ -1,5 +1,6 @@
 {
   "last_valuation_date": null,
   "stale_prices": [],
-  "warnings": []
+  "warnings": [],
+  "cash_by_currency": {}
 }

@@ -32,13 +32,61 @@ export interface Trade {
   side: 'BUY' | 'SELL';
   quantity: number;
   price: number;
+  currency: 'AUD' | 'USD';
   note_slug: string | null;
+}
+
+export interface ClosedPosition {
+  instrument_id: string;
+  type: 'equity' | 'etf' | 'option' | 'crypto';
+  realised_pnl: number;
+  note_slug: string | null;
+}
+
+export interface Contribution {
+  date: string;
+  instrument_id: string;
+  contribution: number;
+}
+
+export interface PeriodReturns {
+  '1M': number | null;
+  '3M': number | null;
+  YTD: number | null;
+  '1Y': number | null;
+  since_inception: number | null;
+}
+
+export interface Drawdown {
+  peak_date: string;
+  trough_date: string;
+  drawdown: number;
+}
+
+export interface SideMetrics {
+  returns: PeriodReturns;
+  annualised_return: number | null;
+  annualised_volatility: number | null;
+  max_drawdown: Drawdown | null;
+  current_drawdown: number | null;
+}
+
+export interface PortfolioMetrics extends SideMetrics {
+  beta: number | null;
+  correlation: number | null;
+  excess_return: number | null;
+}
+
+export interface Metrics {
+  portfolio: PortfolioMetrics | null;
+  benchmark: SideMetrics | null;
 }
 
 export interface Status {
   last_valuation_date: string | null;
   stale_prices: string[];
   warnings: string[];
+  cash_by_currency: Record<string, number>;
 }
 
 export function getStatus(): Status {
@@ -57,18 +105,18 @@ export function getHoldings(): Holding[] {
   return holdings as Holding[];
 }
 
-export function getClosedPositions(): unknown[] {
-  return closedPositions as unknown[];
+export function getClosedPositions(): ClosedPosition[] {
+  return closedPositions as ClosedPosition[];
 }
 
 export function getTrades(): Trade[] {
   return trades as Trade[];
 }
 
-export function getMetrics(): { portfolio: unknown; benchmark: unknown } {
-  return metrics as { portfolio: unknown; benchmark: unknown };
+export function getMetrics(): Metrics {
+  return metrics as Metrics;
 }
 
-export function getAttribution(): unknown[] {
-  return attribution as unknown[];
+export function getAttribution(): Contribution[] {
+  return attribution as Contribution[];
 }

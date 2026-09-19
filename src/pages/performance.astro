@@ -1,11 +1,36 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EquityCurve from '../components/EquityCurve.astro';
-import { getNavDaily, getBenchmarkDaily, getMetrics } from '../lib/data';
+import { formatDate, formatPercent } from '../lib/format';
+import { getNavDaily, getBenchmarkDaily, getMetrics, getAttribution } from '../lib/data';
+import type { PeriodReturns } from '../lib/data';
 
 const navSeries = getNavDaily();
 const benchmarkSeries = getBenchmarkDaily();
 const metrics = getMetrics();
+const attribution = getAttribution();
+
+const PERIODS: { key: keyof PeriodReturns; label: string }[] = [
+  { key: '1M', label: '1 month' },
+  { key: '3M', label: '3 months' },
+  { key: 'YTD', label: 'Year to date' },
+  { key: '1Y', label: '1 year' },
+  { key: 'since_inception', label: 'Since inception' },
+];
+
+function pct(value: number | null): string {
+  return value === null ? '—' : formatPercent(value);
+}
+
+const contributionByInstrument = new Map<string, number>();
+for (const row of attribution) {
+  contributionByInstrument.set(row.instrument_id, (contributionByInstrument.get(row.instrument_id) ?? 0) + row.contribution);
+}
+const contributionRows = [...contributionByInstrument.entries()].sort((a, b) => b[1] - a[1]);
+
+function label(instrumentId: string): string {
+  return instrumentId === 'CASH_AND_FX' ? 'Cash & FX' : instrumentId;
+}
 ---
 
 <BaseLayout title="Performance">
@@ -13,10 +38,146 @@ const metrics = getMetrics();
 
   <EquityCurve portfolio={navSeries} benchmark={benchmarkSeries} />
 
-  <h2>Metrics</h2>
-  {metrics.portfolio === null ? <p>Not enough history yet to compute metrics.</p> : <p>See the ledger for details.</p>}
+  <h2>Returns</h2>
+  {
+    metrics.portfolio === null || metrics.benchmark === null ? (
+      <p>Not enough history yet to compute returns.</p>
+    ) : (
+      <table class="metrics-table">
+        <thead>
+          <tr>
+            <th scope="col">Period</th>
+            <th scope="col">Portfolio</th>
+            <th scope="col">Benchmark</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PERIODS.map((p) => (
+            <tr>
+              <td>{p.label}</td>
+              <td>{pct(metrics.portfolio!.returns[p.key])}</td>
+              <td>{pct(metrics.benchmark!.returns[p.key])}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+
+  <h2>Risk</h2>
+  {
+    metrics.portfolio === null ? (
+      <p>Not enough history yet to compute risk metrics.</p>
+    ) : (
+      <table class="metrics-table">
+        <thead>
+          <tr>
+            <th scope="col">Metric</th>
+            <th scope="col">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Annualised return</td>
+            <td>{pct(metrics.portfolio.annualised_return)}</td>
+          </tr>
+          <tr>
+            <td>Annualised volatility</td>
+            <td>{pct(metrics.portfolio.annualised_volatility)}</td>
+          </tr>
+          <tr>
+            <td>Current drawdown</td>
+            <td>{pct(metrics.portfolio.current_drawdown)}</td>
+          </tr>
+          <tr>
+            <td>
+              Max drawdown
+              {metrics.portfolio.max_drawdown && (
+                <span class="muted">
+                  {' '}
+                  ({formatDate(metrics.portfolio.max_drawdown.peak_date)} to{' '}
+                  {formatDate(metrics.portfolio.max_drawdown.trough_date)})
+                </span>
+              )}
+            </td>
+            <td>{metrics.portfolio.max_drawdown ? pct(metrics.portfolio.max_drawdown.drawdown) : '—'}</td>
+          </tr>
+          <tr>
+            <td>Beta to benchmark</td>
+            <td>{metrics.portfolio.beta === null ? '—' : metrics.portfolio.beta.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>Correlation to benchmark</td>
+            <td>{metrics.portfolio.correlation === null ? '—' : metrics.portfolio.correlation.toFixed(2)}</td>
+          </tr>
+          <tr>
+            <td>Excess return since inception</td>
+            <td>{pct(metrics.portfolio.excess_return)}</td>
+          </tr>
+        </tbody>
+      </table>
+    )
+  }
+
+  <h2>Attribution</h2>
+  <p class="muted">Cumulative contribution to return since inception, by holding.</p>
+  {
+    contributionRows.length === 0 ? (
+      <p>Not enough history yet to compute attribution.</p>
+    ) : (
+      <table class="metrics-table">
+        <thead>
+          <tr>
+            <th scope="col">Holding</th>
+            <th scope="col">Contribution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {contributionRows.map(([instrumentId, contribution]) => (
+            <tr>
+              <td>{label(instrumentId)}</td>
+              <td class={contribution < 0 ? 'loss' : 'gain'}>{formatPercent(contribution)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
 
   <p>
     Full methodology: see the <a href="/method">Method</a> page.
   </p>
 </BaseLayout>
+
+<style>
+  .metrics-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th,
+  td {
+    text-align: right;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: left;
+  }
+
+  .muted {
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+
+  .gain {
+    color: var(--gain);
+  }
+
+  .loss {
+    color: var(--loss);
+  }
+</style>

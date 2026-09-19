@@ -1,20 +1,28 @@
 ---
-import { formatPercent } from '../lib/format';
+import { formatCurrency, formatPercent } from '../lib/format';
 import type { Holding } from '../lib/data';
 
 interface Props {
   holdings: Holding[];
+  // Home shows a compact instrument/weight/return list per the section 13
+  // wireframe; /portfolio shows the full breakdown.
+  compact?: boolean;
 }
 
-const { holdings } = Astro.props;
+const { holdings, compact = false } = Astro.props;
+const columnCount = compact ? 3 : 6;
 ---
 
 <table class="holdings-table">
   <thead>
     <tr>
       <th scope="col">Instrument</th>
+      {!compact && <th scope="col">Type</th>}
       <th scope="col">Weight</th>
+      {!compact && <th scope="col">Avg cost (A$)</th>}
+      {!compact && <th scope="col">Price (A$)</th>}
       <th scope="col">Return</th>
+      {!compact && <th scope="col">Contribution</th>}
     </tr>
   </thead>
   <tbody>
@@ -24,15 +32,19 @@ const { holdings } = Astro.props;
           <td>
             {h.note_slug ? <a href={`/research/${h.note_slug}`}>{h.instrument_id}</a> : h.instrument_id}
           </td>
+          {!compact && <td>{h.type}</td>}
           <td class={h.weight < 0 ? 'loss' : ''}>{formatPercent(h.weight)}</td>
+          {!compact && <td>{formatCurrency(h.average_cost, 'AUD')}</td>}
+          {!compact && <td>{formatCurrency(h.price, 'AUD')}</td>}
           <td class={h.return < 0 ? 'loss' : 'gain'}>{formatPercent(h.return)}</td>
+          {!compact && <td class={h.contribution < 0 ? 'loss' : 'gain'}>{formatPercent(h.contribution)}</td>}
         </tr>
       ))
     }
     {
       holdings.length === 0 && (
         <tr>
-          <td colspan="3">No open positions yet.</td>
+          <td colspan={columnCount}>No open positions yet.</td>
         </tr>
       )
     }

@@ -28,7 +28,7 @@ const trades = getTrades();
             </td>
             <td>{t.side}</td>
             <td>{t.quantity}</td>
-            <td>{formatCurrency(t.price, 'AUD')}</td>
+            <td>{formatCurrency(t.price, t.currency)}</td>
           </tr>
         ))
       }

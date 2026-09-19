@@ -1,10 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HoldingsTable from '../components/HoldingsTable.astro';
-import { getHoldings, getClosedPositions } from '../lib/data';
+import { formatCurrency } from '../lib/format';
+import { getHoldings, getClosedPositions, getStatus } from '../lib/data';
 
 const holdings = getHoldings();
 const closed = getClosedPositions();
+const status = getStatus();
+const cashEntries = Object.entries(status.cash_by_currency);
 ---
 
 <BaseLayout title="Portfolio holdings">
@@ -13,6 +16,84 @@ const closed = getClosedPositions();
   <h2>Open positions</h2>
   <HoldingsTable holdings={holdings} />
 
+  <h2>Cash</h2>
+  {
+    cashEntries.length === 0 ? (
+      <p>No cash recorded yet.</p>
+    ) : (
+      <table class="cash-table">
+        <thead>
+          <tr>
+            <th scope="col">Currency</th>
+            <th scope="col">Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cashEntries.map(([currency, amount]) => (
+            <tr>
+              <td>{currency}</td>
+              <td>{formatCurrency(amount, currency === 'USD' ? 'USD' : 'AUD')}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
+
   <h2>Closed positions</h2>
-  {closed.length === 0 && <p>No closed positions yet.</p>}
+  {
+    closed.length === 0 ? (
+      <p>No closed positions yet.</p>
+    ) : (
+      <table class="closed-table">
+        <thead>
+          <tr>
+            <th scope="col">Instrument</th>
+            <th scope="col">Type</th>
+            <th scope="col">Realised P&L (A$)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {closed.map((c) => (
+            <tr>
+              <td>
+                {c.note_slug ? <a href={`/research/${c.note_slug}`}>{c.instrument_id}</a> : c.instrument_id}
+              </td>
+              <td>{c.type}</td>
+              <td class={c.realised_pnl < 0 ? 'loss' : 'gain'}>{formatCurrency(c.realised_pnl, 'AUD')}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  }
 </BaseLayout>
+
+<style>
+  .cash-table,
+  .closed-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th,
+  td {
+    text-align: right;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: left;
+  }
+
+  .gain {
+    color: var(--gain);
+  }
+
+  .loss {
+    color: var(--loss);
+  }
+</style>
