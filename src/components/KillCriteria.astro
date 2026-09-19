@@ -1,0 +1,21 @@
+---
+interface Props {
+  criteria: string[];
+}
+
+const { criteria } = Astro.props;
+---
+
+<ul class="kill-criteria">
+  {criteria.map((c) => <li>{c}</li>)}
+</ul>
+
+<style>
+  .kill-criteria {
+    padding-left: 1.25rem;
+  }
+
+  .kill-criteria li {
+    margin-bottom: 0.35rem;
+  }
+</style>

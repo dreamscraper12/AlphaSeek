@@ -1,0 +1,3 @@
+instrument_id,type,name,exchange,currency,underlying_id,expiry,right,strike,multiplier,exercise_style,price_source
+TEST:AAA,equity,Test Company AAA,NASDAQ,USD,,,,,,,manual
+TEST:BBB,etf,Test ETF BBB,ASX,AUD,,,,,,,manual

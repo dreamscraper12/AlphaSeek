@@ -1,0 +1,53 @@
+---
+interface Props {
+  wacc: number[];
+  terminalGrowth: number[];
+  values: number[][];
+  currency: 'AUD' | 'USD';
+}
+
+const { wacc, terminalGrowth, values, currency } = Astro.props;
+const symbol = currency === 'AUD' ? 'A$' : 'US$';
+---
+
+<table class="sensitivity-grid">
+  <caption>Fair value per share ({symbol}) by WACC and terminal growth</caption>
+  <thead>
+    <tr>
+      <th scope="col">WACC \ g</th>
+      {terminalGrowth.map((g) => <th scope="col">{(g * 100).toFixed(1)}%</th>)}
+    </tr>
+  </thead>
+  <tbody>
+    {
+      wacc.map((w, i) => (
+        <tr>
+          <th scope="row">{(w * 100).toFixed(1)}%</th>
+          {values[i]?.map((v) => <td>{v.toFixed(2)}</td>)}
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  .sensitivity-grid {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th,
+  td {
+    text-align: right;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  caption {
+    text-align: left;
+    color: var(--muted);
+    font-size: 0.8125rem;
+    padding-bottom: 0.5rem;
+  }
+</style>

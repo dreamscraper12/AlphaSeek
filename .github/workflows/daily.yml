@@ -1,0 +1,31 @@
+name: Daily valuation
+
+on:
+  schedule:
+    - cron: "0 23 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  value:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.12.17"
+      - run: uv run --project pipeline portfolio build
+      - run: uv run --project pipeline pytest
+      - name: Commit generated data if changed
+        run: |
+          if ! git diff --quiet -- data/generated; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add data/generated
+            git commit -m "data: valuation for $(date -u +%F)"
+            git push
+          else
+            echo "No change in data/generated; nothing to commit."
+          fi

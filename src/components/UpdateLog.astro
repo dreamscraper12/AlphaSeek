@@ -1,0 +1,38 @@
+---
+import { formatCurrency, formatDate } from '../lib/format';
+
+interface Props {
+  updates: { date: Date; fair_value: number; summary: string }[];
+  currency: 'AUD' | 'USD';
+}
+
+const { updates, currency } = Astro.props;
+---
+
+{
+  updates.length > 0 && (
+    <ol class="update-log">
+      {updates.map((u) => (
+        <li>
+          <time datetime={new Date(u.date).toISOString()}>{formatDate(u.date)}</time>
+          <span> — fair value revised to {formatCurrency(u.fair_value, currency)}. </span>
+          <span>{u.summary}</span>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+<style>
+  .update-log {
+    padding-left: 1.25rem;
+  }
+
+  .update-log li {
+    margin-bottom: 0.5rem;
+  }
+
+  time {
+    color: var(--muted);
+  }
+</style>

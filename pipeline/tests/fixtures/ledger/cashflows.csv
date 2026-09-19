@@ -1,0 +1,2 @@
+date,type,amount,currency,instrument_id,memo
+2026-01-01,DEPOSIT,10000.00,AUD,,Initial deposit

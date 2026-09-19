@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EquityCurve from '../components/EquityCurve.astro';
+import { getNavDaily, getBenchmarkDaily, getMetrics } from '../lib/data';
+
+const navSeries = getNavDaily();
+const benchmarkSeries = getBenchmarkDaily();
+const metrics = getMetrics();
+---
+
+<BaseLayout title="Performance">
+  <h1>Performance</h1>
+
+  <EquityCurve portfolio={navSeries} benchmark={benchmarkSeries} />
+
+  <h2>Metrics</h2>
+  {metrics.portfolio === null ? <p>Not enough history yet to compute metrics.</p> : <p>See the ledger for details.</p>}
+
+  <p>
+    Full methodology: see the <a href="/method">Method</a> page.
+  </p>
+</BaseLayout>

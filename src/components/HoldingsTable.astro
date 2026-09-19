@@ -1,0 +1,68 @@
+---
+import { formatPercent } from '../lib/format';
+import type { Holding } from '../lib/data';
+
+interface Props {
+  holdings: Holding[];
+}
+
+const { holdings } = Astro.props;
+---
+
+<table class="holdings-table">
+  <thead>
+    <tr>
+      <th scope="col">Instrument</th>
+      <th scope="col">Weight</th>
+      <th scope="col">Return</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      holdings.map((h) => (
+        <tr>
+          <td>
+            {h.note_slug ? <a href={`/research/${h.note_slug}`}>{h.instrument_id}</a> : h.instrument_id}
+          </td>
+          <td class={h.weight < 0 ? 'loss' : ''}>{formatPercent(h.weight)}</td>
+          <td class={h.return < 0 ? 'loss' : 'gain'}>{formatPercent(h.return)}</td>
+        </tr>
+      ))
+    }
+    {
+      holdings.length === 0 && (
+        <tr>
+          <td colspan="3">No open positions yet.</td>
+        </tr>
+      )
+    }
+  </tbody>
+</table>
+
+<style>
+  .holdings-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th,
+  td {
+    text-align: right;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: left;
+  }
+
+  .gain {
+    color: var(--gain);
+  }
+
+  .loss {
+    color: var(--loss);
+  }
+</style>

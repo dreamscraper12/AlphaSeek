@@ -1,0 +1,35 @@
+---
+interface Props {
+  usedFor: string[];
+  human: string[];
+  aiFairValue?: number;
+  currency?: 'AUD' | 'USD';
+}
+
+const { usedFor, human, aiFairValue, currency } = Astro.props;
+const symbol = currency === 'AUD' ? 'A$' : 'US$';
+---
+
+<div class="ai-disclosure">
+  <p>
+    <strong>AI was used for:</strong> {usedFor.join(', ')}.
+  </p>
+  <p>
+    <strong>I decided:</strong> {human.join(', ')}.
+  </p>
+  {
+    aiFairValue !== undefined && (
+      <p>
+        An independent AI fair value estimate of {symbol}
+        {aiFairValue.toFixed(2)} was logged before mine.
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .ai-disclosure {
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+</style>

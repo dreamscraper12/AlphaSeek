@@ -1,0 +1,62 @@
+---
+import { formatCurrency, formatDate, formatPercent } from '../lib/format';
+
+interface Props {
+  publishedAt: Date;
+  priceAtPublication: number;
+  currency: 'AUD' | 'USD';
+  currentPrice: number | null;
+  currentPriceAsOf: string | null;
+  fairValue: number;
+  positionSize: number | null;
+  status: 'open' | 'exited' | 'passed';
+}
+
+const {
+  publishedAt,
+  priceAtPublication,
+  currency,
+  currentPrice,
+  currentPriceAsOf,
+  fairValue,
+  positionSize,
+  status,
+} = Astro.props;
+
+const upside = currentPrice ? fairValue / currentPrice - 1 : null;
+---
+
+<dl class="snapshot-panel">
+  <div><dt>Published</dt><dd>{formatDate(publishedAt)}</dd></div>
+  <div><dt>Price at publication</dt><dd>{formatCurrency(priceAtPublication, currency)}</dd></div>
+  <div>
+    <dt>Current price{currentPriceAsOf ? ` (as of ${formatDate(currentPriceAsOf)})` : ''}</dt>
+    <dd>{currentPrice !== null ? formatCurrency(currentPrice, currency) : '—'}</dd>
+  </div>
+  <div><dt>My fair value estimate</dt><dd>{formatCurrency(fairValue, currency)}</dd></div>
+  <div><dt>Implied upside</dt><dd>{upside !== null ? formatPercent(upside) : '—'}</dd></div>
+  <div><dt>Position size</dt><dd>{positionSize !== null ? formatPercent(positionSize) : '—'}</dd></div>
+  <div><dt>Status</dt><dd>{status}</dd></div>
+</dl>
+
+<style>
+  .snapshot-panel {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 1rem;
+    border: 1px solid var(--rule);
+  }
+
+  dt {
+    color: var(--muted);
+    font-size: 0.8125rem;
+  }
+
+  dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+</style>

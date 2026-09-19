@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatCurrency, formatDate } from '../lib/format';
+import { getTrades } from '../lib/data';
+
+const trades = getTrades();
+---
+
+<BaseLayout title="Journal">
+  <h1>Journal</h1>
+  <table class="journal-table">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Instrument</th>
+        <th scope="col">Side</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        trades.map((t) => (
+          <tr>
+            <td>{formatDate(t.executed_at)}</td>
+            <td>
+              {t.note_slug ? <a href={`/research/${t.note_slug}`}>{t.instrument_id}</a> : t.instrument_id}
+            </td>
+            <td>{t.side}</td>
+            <td>{t.quantity}</td>
+            <td>{formatCurrency(t.price, 'AUD')}</td>
+          </tr>
+        ))
+      }
+      {trades.length === 0 && (
+        <tr>
+          <td colspan="5">No trades recorded yet.</td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</BaseLayout>
+
+<style>
+  .journal-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th,
+  td {
+    text-align: right;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  th:first-child,
+  td:first-child,
+  th:nth-child(2),
+  td:nth-child(2) {
+    text-align: left;
+  }
+</style>

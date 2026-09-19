@@ -1,0 +1,20 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const entry = await getEntry('pages', 'method');
+const { Content } = entry ? await render(entry) : { Content: null };
+---
+
+<BaseLayout title="Method">
+  <article class="prose">{Content && <Content />}</article>
+</BaseLayout>
+
+<style>
+  .prose {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    max-width: var(--measure);
+  }
+</style>

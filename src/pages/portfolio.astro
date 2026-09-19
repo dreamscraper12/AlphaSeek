@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HoldingsTable from '../components/HoldingsTable.astro';
+import { getHoldings, getClosedPositions } from '../lib/data';
+
+const holdings = getHoldings();
+const closed = getClosedPositions();
+---
+
+<BaseLayout title="Portfolio holdings">
+  <h1>Portfolio</h1>
+
+  <h2>Open positions</h2>
+  <HoldingsTable holdings={holdings} />
+
+  <h2>Closed positions</h2>
+  {closed.length === 0 && <p>No closed positions yet.</p>}
+</BaseLayout>

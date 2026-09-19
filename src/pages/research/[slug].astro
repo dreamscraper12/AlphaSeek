@@ -1,0 +1,57 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SnapshotPanel from '../../components/SnapshotPanel.astro';
+import SensitivityGrid from '../../components/SensitivityGrid.astro';
+import KillCriteria from '../../components/KillCriteria.astro';
+import AiDisclosure from '../../components/AiDisclosure.astro';
+import UpdateLog from '../../components/UpdateLog.astro';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+const { data } = note;
+---
+
+<BaseLayout title={data.title}>
+  <h1>{data.title}</h1>
+
+  <SnapshotPanel
+    publishedAt={data.published_at}
+    priceAtPublication={data.price_at_publication}
+    currency={data.currency as 'AUD' | 'USD'}
+    currentPrice={null}
+    currentPriceAsOf={null}
+    fairValue={data.fair_value}
+    positionSize={null}
+    status={data.status}
+  />
+
+  <Content />
+
+  {
+    data.sensitivity && (
+      <SensitivityGrid
+        wacc={data.sensitivity.wacc}
+        terminalGrowth={data.sensitivity.terminal_growth}
+        values={data.sensitivity.values}
+        currency={data.currency as 'AUD' | 'USD'}
+      />
+    )
+  }
+
+  {data.kill_criteria && <KillCriteria criteria={data.kill_criteria} />}
+
+  <AiDisclosure
+    usedFor={data.ai.used_for}
+    human={data.ai.human}
+    aiFairValue={data.ai.ai_fair_value}
+    currency={data.currency as 'AUD' | 'USD'}
+  />
+
+  {data.updates && <UpdateLog updates={data.updates} currency={data.currency as 'AUD' | 'USD'} />}
+</BaseLayout>

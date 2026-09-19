@@ -1,0 +1,112 @@
+---
+import { formatCurrency, formatDate } from '../lib/format';
+import type { NavPoint } from '../lib/data';
+
+interface Props {
+  portfolio: NavPoint[];
+  benchmark: NavPoint[];
+}
+
+const { portfolio, benchmark } = Astro.props;
+const hasData = portfolio.length > 1;
+const chartData = JSON.stringify({ portfolio, benchmark });
+---
+
+<figure class="equity-curve">
+  {
+    hasData ? (
+      <div id="equity-chart" data-series={chartData} />
+    ) : (
+      <p class="empty">Not enough history yet to draw a chart.</p>
+    )
+  }
+  <figcaption>
+    <table>
+      <caption class="visually-hidden">Portfolio value versus benchmark, by date</caption>
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Portfolio (A$)</th>
+          <th scope="col">Benchmark (A$)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {portfolio.map((p, i) => (
+          <tr>
+            <td>{formatDate(p.date)}</td>
+            <td>{formatCurrency(p.nav, 'AUD')}</td>
+            <td>{benchmark[i] ? formatCurrency(benchmark[i].nav, 'AUD') : '—'}</td>
+          </tr>
+        ))}
+        {portfolio.length === 0 && (
+          <tr>
+            <td colspan="3">No valuation history yet.</td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </figcaption>
+</figure>
+
+<script>
+  import uPlot from 'uplot';
+  import 'uplot/dist/uPlot.min.css';
+
+  const el = document.getElementById('equity-chart');
+  if (el) {
+    const { portfolio, benchmark } = JSON.parse(el.dataset.series ?? '{}') as {
+      portfolio: { date: string; nav: number }[];
+      benchmark: { date: string; nav: number }[];
+    };
+
+    const x = portfolio.map((p) => new Date(p.date).getTime() / 1000);
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+    const muted = getComputedStyle(document.documentElement).getPropertyValue('--muted');
+
+    new uPlot(
+      {
+        width: el.clientWidth || 640,
+        height: 320,
+        series: [
+          {},
+          { label: 'Portfolio', stroke: accent.trim() || '#2346a0' },
+          { label: 'Benchmark', stroke: muted.trim() || '#5e6875' },
+        ],
+      },
+      [x, portfolio.map((p) => p.nav), benchmark.map((p) => p.nav)],
+      el,
+    );
+  }
+</script>
+
+<style>
+  .empty {
+    color: var(--muted);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+  }
+
+  th,
+  td {
+    text-align: right;
+    padding: 0.35rem 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: left;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+</style>
