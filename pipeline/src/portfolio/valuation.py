@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from datetime import date, timedelta
 from decimal import Decimal
 
+from portfolio.fx import rate_with_carry_forward
 from portfolio.ledger import Ledger
 from portfolio.positions import build_positions
 from portfolio.sources import FxRateSource, PriceSource
@@ -62,20 +63,6 @@ def _price_with_carry_forward(
     return None
 
 
-def _fx_with_carry_forward(
-    fx_source: FxRateSource, from_currency: str, to_currency: str, as_of: date
-) -> Decimal | None:
-    if from_currency == to_currency:
-        return Decimal(1)
-    d = as_of
-    for _ in range(_CARRY_FORWARD_LOOKBACK_DAYS):
-        rate = fx_source.get_rate(from_currency, to_currency, d)
-        if rate is not None:
-            return rate
-        d -= timedelta(days=1)
-    return None
-
-
 def value_day(
     ledger: Ledger, as_of: date, price_source: PriceSource, fx_source: FxRateSource
 ) -> DailyValuation:
@@ -101,7 +88,7 @@ def value_day(
         multiplier = instrument.multiplier if instrument.type == "option" else Decimal(1)
         market_value_local = price * multiplier * quantity
 
-        rate = _fx_with_carry_forward(fx_source, currency, "AUD", as_of)
+        rate = rate_with_carry_forward(fx_source, currency, "AUD", as_of)
         if rate is None:
             raise ValueError(f"missing FX rate {currency}->AUD on {as_of}, no fallback available")
         market_value_aud = market_value_local * rate
@@ -128,7 +115,7 @@ def value_day(
             # No margin is modelled (CLAUDE.md section 11): this is a hard
             # validation failure, not a warning.
             raise ValueError(f"negative cash in {currency} on {as_of}: {amount}")
-        rate = _fx_with_carry_forward(fx_source, currency, "AUD", as_of)
+        rate = rate_with_carry_forward(fx_source, currency, "AUD", as_of)
         if rate is None:
             raise ValueError(f"missing FX rate {currency}->AUD on {as_of}, no fallback available")
         cash_aud += amount * rate

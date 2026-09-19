@@ -24,9 +24,11 @@ def _run_build(ledger_dir: Path) -> int:
     if status != 0:
         return status
     print(
-        "Price adapters and single-day valuation are wired up (portfolio.valuation.value_day), "
-        "but the full daily NAV series / TWR / benchmark / metrics pipeline and data/generated "
-        "writers (CLAUDE.md section 10) aren't built yet.",
+        "Price adapters, single-day valuation, the NAV/TWR engine and portfolio-side metrics "
+        "are implemented (portfolio.valuation, portfolio.engine, portfolio.metrics), but this "
+        "command doesn't call them yet: it still needs a live price/FX source wired up here, "
+        "the IVV benchmark (needs a distribution data source, CLAUDE.md section 3), attribution, "
+        "and the data/generated/*.json writers (section 10).",
         file=sys.stderr,
     )
     return 1
