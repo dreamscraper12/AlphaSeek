@@ -15,4 +15,6 @@ uv run --project pipeline pytest
 
 ## Status
 
-Phase 1 scaffolding only: the site builds and the ledger validates, but no price source is wired up yet, so `portfolio build` and the daily valuation are not yet functional. See the open decisions and decision log in CLAUDE.md.
+Phase 1 in progress. The site builds and the ledger validates. Price adapters (Twelve Data for ASX/US equities and ETFs, Frankfurter for FX, CoinGecko for crypto, manual marks for options) and single-day valuation are implemented and tested (`portfolio.valuation.value_day`), but `portfolio build` still isn't functional end to end — the daily NAV series, TWR, benchmark, shadow benchmark, metrics, attribution and `data/generated/*.json` writers described in CLAUDE.md section 10 aren't built yet. See the open decisions and decision log in CLAUDE.md.
+
+Using the equity/ETF price adapter for real requires a free API key from [twelvedata.com](https://twelvedata.com/), set as `TWELVE_DATA_API_KEY` (see `.env.example`). Its exact ASX symbol coverage hasn't been verified against a live key yet.

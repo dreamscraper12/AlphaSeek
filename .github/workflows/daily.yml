@@ -17,6 +17,8 @@ jobs:
         with:
           version: "0.12.17"
       - run: uv run --project pipeline portfolio build
+        env:
+          TWELVE_DATA_API_KEY: ${{ secrets.TWELVE_DATA_API_KEY }}
       - run: uv run --project pipeline pytest
       - name: Commit generated data if changed
         run: |

@@ -24,8 +24,9 @@ def _run_build(ledger_dir: Path) -> int:
     if status != 0:
         return status
     print(
-        "Valuation pipeline not yet implemented — see CLAUDE.md section 3 (data provider) "
-        "and section 18 (build phases).",
+        "Price adapters and single-day valuation are wired up (portfolio.valuation.value_day), "
+        "but the full daily NAV series / TWR / benchmark / metrics pipeline and data/generated "
+        "writers (CLAUDE.md section 10) aren't built yet.",
         file=sys.stderr,
     )
     return 1

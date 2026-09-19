@@ -34,7 +34,7 @@ When a task depends on an unchecked item, stop and ask instead of choosing.
 - [ ] Inception date
 - [x] Broker: Interactive Brokers (confirmed 2026-09-19)
 - [ ] Crypto venue: whether IBKR's own crypto offering is used, or a separate exchange
-- [ ] Data provider for ASX and US equities/ETFs, and for FX — note: IBKR market data is licensed for private use and can't be redistributed on a public site, so a separate provider is needed for prices actually shown on the site even though IBKR is the broker
+- [x] Data provider for ASX and US equities/ETFs, and for FX (confirmed 2026-09-19): Twelve Data for equities/ETFs, Frankfurter (ECB rates) for FX, CoinGecko for crypto
 - [ ] Data source for option prices (US and ASX), or manual marks only
 - [ ] Trading policy: disclosure window (proposed: 24 hours) and minimum days between publishing a note and trading against it
 - [ ] Disclaimer wording reviewed by a financial services lawyer
@@ -404,3 +404,7 @@ Append rows; never delete.
 | 2026-09-19 | Shadow benchmark for dollar comparisons   | Shows the same dollars in the S&P 500                    |
 | 2026-09-19 | Static site, ledger in a public repo      | A verifiable record with nothing to run server-side      |
 | 2026-09-19 | Broker: Interactive Brokers               | Owner's choice; covers ASX/US equities, options and multi-currency cash. IBKR's own market data feed is private-use only, so a separate provider is still needed for public prices |
+| 2026-09-19 | Rejected Stooq as a price source           | Its CSV endpoints now require solving a client-side JavaScript proof-of-work challenge before responding (confirmed live on stooq.com and stooq.pl); scripting around that in an automated job means building a bot-detection bypass, which is fragile and likely against its terms |
+| 2026-09-19 | Equities/ETFs: Twelve Data                | Free-tier API with a registered key; better reported ASX/global exchange coverage than the alternative considered (Alpha Vantage), which is US-focused and rate-limited to 25 requests/day on the free tier |
+| 2026-09-19 | FX: Frankfurter (ECB reference rates)     | Free, keyless, no signup; confirmed live for both single-date and date-range AUD/USD lookups; no redistribution concern since only derived AUD figures are published |
+| 2026-09-19 | Crypto: CoinGecko                          | Free public API works unauthenticated for current and recent (< 365 day) history, confirmed live; matches section 8's requirement for an AUD quote where available |
