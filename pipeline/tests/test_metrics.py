@@ -5,10 +5,14 @@ from portfolio.metrics import (
     IndexPoint,
     annualised_return,
     annualised_volatility,
+    beta,
+    correlation,
     current_drawdown,
+    excess_return,
     max_drawdown,
     period_return,
     period_returns,
+    returns_from_index,
     since_inception_return,
 )
 
@@ -82,3 +86,61 @@ def test_annualised_volatility_hand_calculated():
 
 def test_annualised_volatility_none_with_fewer_than_two_observations():
     assert annualised_volatility([Decimal("0.01")]) is None
+
+
+BENCHMARK_60 = [Decimal(i) / Decimal(1000) for i in range(1, 61)]  # 0.001 .. 0.060, all distinct
+
+
+def test_beta_and_correlation_none_below_60_observations():
+    short = BENCHMARK_60[:59]
+    assert beta(short, short) is None
+    assert correlation(short, short) is None
+
+
+def test_beta_and_correlation_none_when_lengths_differ():
+    assert beta(BENCHMARK_60, BENCHMARK_60[:59]) is None
+    assert correlation(BENCHMARK_60, BENCHMARK_60[:59]) is None
+
+
+def test_beta_and_correlation_of_a_series_against_itself():
+    assert beta(BENCHMARK_60, BENCHMARK_60) == Decimal("1")
+    assert correlation(BENCHMARK_60, BENCHMARK_60) == Decimal("1")
+
+
+def test_beta_and_correlation_scale_and_sign_correctly():
+    doubled = [2 * x for x in BENCHMARK_60]
+    negated = [-x for x in BENCHMARK_60]
+
+    assert beta(doubled, BENCHMARK_60) == Decimal("2")
+    assert correlation(doubled, BENCHMARK_60) == Decimal("1")
+
+    assert beta(negated, BENCHMARK_60) == Decimal("-1")
+    assert correlation(negated, BENCHMARK_60) == Decimal("-1")
+
+
+def test_beta_and_correlation_none_with_zero_variance_benchmark():
+    flat = [Decimal("0.01")] * 60
+    assert beta(BENCHMARK_60, flat) is None
+    assert correlation(BENCHMARK_60, flat) is None
+
+
+def test_excess_return_is_portfolio_minus_benchmark():
+    assert excess_return(Decimal("0.15"), Decimal("0.10")) == Decimal("0.05")
+
+
+def test_excess_return_none_if_either_side_is_missing():
+    assert excess_return(None, Decimal("0.10")) is None
+    assert excess_return(Decimal("0.15"), None) is None
+
+
+def test_returns_from_index_recovers_the_returns_that_built_it():
+    from portfolio.performance import chain_link
+
+    original_returns = [Decimal("0.05"), Decimal("-0.02"), Decimal("0.01")]
+    index_values = chain_link(original_returns)
+    series = [IndexPoint(date(2026, 1, i + 1), idx) for i, idx in enumerate(index_values)]
+
+    recovered = returns_from_index(series)
+
+    assert recovered == original_returns
+    assert len(recovered) == len(series)  # full-length, not one shorter

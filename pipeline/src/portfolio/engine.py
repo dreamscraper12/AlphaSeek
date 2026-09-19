@@ -1,21 +1,14 @@
 """Builds the portfolio's daily NAV/TWR series from the ledger — the piece
 that turns single-day valuations (portfolio.valuation.value_day) into the
-return history the site is built around. See CLAUDE.md section 9.
-
-Business days are treated as Monday-Friday; AU/US public holidays aren't
-modelled as a separate calendar, since a holiday behaves exactly like a
-stale-price gap the valuation layer already carries forward across.
-
-The benchmark (IVV total return, with distributions reinvested — see
-section 9) isn't included here: it needs a distribution data source that
-hasn't been chosen yet (CLAUDE.md section 3)."""
+return history the site is built around. See CLAUDE.md section 9."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date, timedelta
+from datetime import date
 from decimal import Decimal
 
+from portfolio.calendar_days import business_days
 from portfolio.fx import rate_with_carry_forward
 from portfolio.ledger import Ledger
 from portfolio.performance import chain_link, daily_return
@@ -31,17 +24,15 @@ class NavPoint:
     valuation: DailyValuation
 
 
-def _business_days(start: date, end: date) -> list[date]:
-    days = []
-    d = start
-    while d <= end:
-        if d.weekday() < 5:
-            days.append(d)
-        d += timedelta(days=1)
-    return days
+def inception_start_date(ledger: Ledger) -> date | None:
+    """The date the index starts from: the earliest deposit, which arrives
+    before the first trade (CLAUDE.md section 9)."""
+    deposit_dates = [c.date for c in ledger.cashflows if c.type == "DEPOSIT"]
+    return min(deposit_dates) if deposit_dates else None
 
 
-def _external_flow_aud(ledger: Ledger, as_of: date, fx_source: FxRateSource) -> Decimal:
+def external_flow_aud(ledger: Ledger, as_of: date, fx_source: FxRateSource) -> Decimal:
+    """Net deposits minus withdrawals on exactly this date, converted to AUD."""
     total = Decimal(0)
     for c in ledger.cashflows:
         if c.date != as_of or c.type not in ("DEPOSIT", "WITHDRAWAL"):
@@ -53,13 +44,19 @@ def _external_flow_aud(ledger: Ledger, as_of: date, fx_source: FxRateSource) -> 
     return total
 
 
+def external_flows_by_date(ledger: Ledger, fx_source: FxRateSource) -> dict[date, Decimal]:
+    """Every date with a net external flow, converted to AUD — used by the
+    shadow benchmark to apply the same flows to a different instrument."""
+    dates = {c.date for c in ledger.cashflows if c.type in ("DEPOSIT", "WITHDRAWAL")}
+    return {d: external_flow_aud(ledger, d, fx_source) for d in dates}
+
+
 def build_nav_series(
     ledger: Ledger, as_of: date, price_source: PriceSource, fx_source: FxRateSource
 ) -> list[NavPoint]:
-    deposit_dates = [c.date for c in ledger.cashflows if c.type == "DEPOSIT"]
-    if not deposit_dates:
+    start = inception_start_date(ledger)
+    if start is None:
         return []
-    start = min(deposit_dates)
 
     # The deposit(s) on or before the start date define the "prior close"
     # baseline NAV (CLAUDE.md section 9): the first day's return is
@@ -75,9 +72,9 @@ def build_nav_series(
     )
 
     rows: list[tuple[date, DailyValuation, Decimal]] = []
-    for d in _business_days(start, as_of):
+    for d in business_days(start, as_of):
         valuation = value_day(ledger, d, price_source, fx_source)
-        flow = Decimal(0) if d == start else _external_flow_aud(ledger, d, fx_source)
+        flow = Decimal(0) if d == start else external_flow_aud(ledger, d, fx_source)
         r = daily_return(valuation.nav_aud, previous_nav, flow)
         rows.append((d, valuation, r))
         previous_nav = valuation.nav_aud

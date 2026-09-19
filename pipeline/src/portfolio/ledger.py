@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import csv
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal
@@ -10,6 +9,8 @@ from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
+
+from portfolio.csvutil import read_rows
 
 InstrumentType = Literal["equity", "etf", "option", "crypto"]
 Side = Literal["BUY", "SELL"]
@@ -118,19 +119,13 @@ class Ledger:
     corrections: list[Correction]
 
 
-def _read_rows(path: Path) -> list[dict[str, str | None]]:
-    with path.open(newline="", encoding="utf-8") as f:
-        rows = [row for row in csv.DictReader(f) if any(v.strip() for v in row.values())]
-    return [{k: (v if v != "" else None) for k, v in row.items()} for row in rows]
-
-
 def load_ledger(ledger_dir: Path) -> Ledger:
     return Ledger(
-        instruments=[Instrument(**row) for row in _read_rows(ledger_dir / "instruments.csv")],
-        trades=[Trade(**row) for row in _read_rows(ledger_dir / "trades.csv")],
-        fx=[FxConversion(**row) for row in _read_rows(ledger_dir / "fx.csv")],
-        cashflows=[Cashflow(**row) for row in _read_rows(ledger_dir / "cashflows.csv")],
-        events=[Event(**row) for row in _read_rows(ledger_dir / "events.csv")],
-        manual_marks=[ManualMark(**row) for row in _read_rows(ledger_dir / "manual_marks.csv")],
-        corrections=[Correction(**row) for row in _read_rows(ledger_dir / "corrections.csv")],
+        instruments=[Instrument(**row) for row in read_rows(ledger_dir / "instruments.csv")],
+        trades=[Trade(**row) for row in read_rows(ledger_dir / "trades.csv")],
+        fx=[FxConversion(**row) for row in read_rows(ledger_dir / "fx.csv")],
+        cashflows=[Cashflow(**row) for row in read_rows(ledger_dir / "cashflows.csv")],
+        events=[Event(**row) for row in read_rows(ledger_dir / "events.csv")],
+        manual_marks=[ManualMark(**row) for row in read_rows(ledger_dir / "manual_marks.csv")],
+        corrections=[Correction(**row) for row in read_rows(ledger_dir / "corrections.csv")],
     )

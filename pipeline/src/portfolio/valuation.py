@@ -7,16 +7,16 @@ staleness and its warning threshold."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, timedelta
+from datetime import date
 from decimal import Decimal
 
 from portfolio.fx import rate_with_carry_forward
 from portfolio.ledger import Ledger
 from portfolio.positions import build_positions
+from portfolio.prices import price_with_carry_forward
 from portfolio.sources import FxRateSource, PriceSource
 
 STALE_WARNING_BUSINESS_DAYS = 3
-_CARRY_FORWARD_LOOKBACK_DAYS = 10
 
 
 @dataclass(frozen=True)
@@ -41,28 +41,6 @@ class DailyValuation:
     warnings: list[str] = field(default_factory=list)
 
 
-def _business_days_between(start: date, end: date) -> int:
-    days = 0
-    d = start
-    while d < end:
-        d += timedelta(days=1)
-        if d.weekday() < 5:
-            days += 1
-    return days
-
-
-def _price_with_carry_forward(
-    source: PriceSource, instrument_id: str, as_of: date
-) -> tuple[Decimal, str, date, int] | None:
-    d = as_of
-    for _ in range(_CARRY_FORWARD_LOOKBACK_DAYS):
-        quote = source.get_price(instrument_id, d)
-        if quote is not None:
-            return quote.price, quote.currency, d, _business_days_between(d, as_of)
-        d -= timedelta(days=1)
-    return None
-
-
 def value_day(
     ledger: Ledger, as_of: date, price_source: PriceSource, fx_source: FxRateSource
 ) -> DailyValuation:
@@ -76,7 +54,7 @@ def value_day(
         if quantity == 0:
             continue
         instrument = instruments_by_id[instrument_id]
-        priced = _price_with_carry_forward(price_source, instrument_id, as_of)
+        priced = price_with_carry_forward(price_source, instrument_id, as_of)
         if priced is None:
             raise ValueError(f"missing price for {instrument_id} on {as_of}, no fallback available")
         price, currency, price_as_of, stale_days = priced

@@ -5,8 +5,10 @@ import sys
 from pathlib import Path
 
 from portfolio import output
-from portfolio.engine import build_nav_series
+from portfolio.benchmark import ivv_total_return_series, load_distributions, shadow_benchmark_series
+from portfolio.engine import build_nav_series, external_flows_by_date, inception_start_date
 from portfolio.ledger import Ledger, load_ledger
+from portfolio.metrics import IndexPoint
 from portfolio.schedule import latest_closed_business_day
 from portfolio.sources.coingecko import CoinGeckoSource
 from portfolio.sources.frankfurter import FrankfurterFxSource
@@ -27,42 +29,67 @@ def _run_validate(ledger_dir: Path) -> int:
     return 0
 
 
-def _build_sources(ledger: Ledger, cache_dir: Path) -> tuple[RoutedPriceSource, FrankfurterFxSource]:
+def _build_sources(ledger: Ledger, cache_dir: Path) -> tuple[RoutedPriceSource, FrankfurterFxSource, TwelveDataSource]:
     manual = ManualMarkSource(ledger.manual_marks)
-    providers = {
-        "twelvedata": TwelveDataSource(cache_dir),
-        "coingecko": CoinGeckoSource(cache_dir),
-    }
+    twelvedata = TwelveDataSource(cache_dir)
+    providers = {"twelvedata": twelvedata, "coingecko": CoinGeckoSource(cache_dir)}
     price_source = RoutedPriceSource(ledger.instruments, manual, providers)
     fx_source = FrankfurterFxSource(cache_dir)
-    return price_source, fx_source
+    # IVV isn't a ledger instrument (it's the benchmark, not something owned),
+    # so it can't go through the router, which looks up price_source by
+    # instrument — it's always priced directly via Twelve Data.
+    return price_source, fx_source, twelvedata
 
 
-def _run_build(ledger_dir: Path, cache_dir: Path, generated_dir: Path) -> int:
+def _run_build(ledger_dir: Path, cache_dir: Path, generated_dir: Path, benchmark_dir: Path) -> int:
     status = _run_validate(ledger_dir)
     if status != 0:
         return status
 
     ledger = load_ledger(ledger_dir)
-    price_source, fx_source = _build_sources(ledger, cache_dir)
+    price_source, fx_source, ivv_price_source = _build_sources(ledger, cache_dir)
     as_of = latest_closed_business_day()
 
     try:
-        series = build_nav_series(ledger, as_of, price_source, fx_source)
+        nav_series = build_nav_series(ledger, as_of, price_source, fx_source)
     except (ValueError, RuntimeError) as e:
         print(f"error: {e}", file=sys.stderr)
         return 1
 
-    output.write_json(generated_dir / "nav_daily.json", output.nav_daily_json(series))
-    output.write_json(generated_dir / "status.json", output.status_json(series))
+    output.write_json(generated_dir / "nav_daily.json", output.nav_daily_json(nav_series))
+    output.write_json(generated_dir / "status.json", output.status_json(nav_series))
 
-    if series:
-        print(f"Valued through {series[-1].date} ({len(series)} business days).")
-    else:
-        print("No deposit in the ledger yet — wrote an empty NAV series.")
+    start = inception_start_date(ledger)
+    if start is None:
+        output.write_json(generated_dir / "benchmark_daily.json", [])
+        output.write_json(generated_dir / "metrics.json", {"portfolio": None, "benchmark": None})
+        print("No deposit in the ledger yet — wrote empty NAV and benchmark series.")
+        print(
+            "Holdings, closed_positions, trades and attribution (CLAUDE.md section 10) "
+            "still aren't implemented.",
+            file=sys.stderr,
+        )
+        return 0
+
+    try:
+        distributions = load_distributions(benchmark_dir / "ivv_distributions.csv")
+        benchmark_series = ivv_total_return_series(start, as_of, ivv_price_source, distributions)
+    except (ValueError, RuntimeError) as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
+
+    flows = external_flows_by_date(ledger, fx_source)
+    shadow_series = shadow_benchmark_series(flows, benchmark_series, inception_date=start)
+
+    output.write_json(generated_dir / "benchmark_daily.json", output.benchmark_daily_json(shadow_series, benchmark_series))
+
+    portfolio_index_series = [IndexPoint(date=p.date, index=p.index) for p in nav_series]
+    output.write_json(generated_dir / "metrics.json", output.metrics_json(portfolio_index_series, benchmark_series))
+
+    print(f"Valued through {nav_series[-1].date} ({len(nav_series)} business days).")
     print(
-        "The benchmark, attribution, and the holdings/closed_positions/trades/metrics "
-        "writers (CLAUDE.md section 10) still aren't implemented.",
+        "Holdings, closed_positions, trades and attribution (CLAUDE.md section 10) "
+        "still aren't implemented.",
         file=sys.stderr,
     )
     return 0
@@ -82,6 +109,12 @@ def main() -> None:
         default=Path("data/generated"),
         help="path to write pipeline output",
     )
+    parser.add_argument(
+        "--benchmark-dir",
+        type=Path,
+        default=Path("data/benchmark"),
+        help="path to the IVV distribution history",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("validate", help="validate the ledger without pricing it")
     subparsers.add_parser("build", help="recompute data/generated")
@@ -90,4 +123,4 @@ def main() -> None:
     if args.command == "validate":
         sys.exit(_run_validate(args.ledger_dir))
     elif args.command == "build":
-        sys.exit(_run_build(args.ledger_dir, args.cache_dir, args.generated_dir))
+        sys.exit(_run_build(args.ledger_dir, args.cache_dir, args.generated_dir, args.benchmark_dir))

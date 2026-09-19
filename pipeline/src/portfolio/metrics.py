@@ -1,7 +1,5 @@
 """Performance statistics derived from a TWR index series. See CLAUDE.md
-section 9. Beta, correlation and excess return need a paired benchmark
-return series and aren't implemented yet — the benchmark itself needs a
-distribution data source that hasn't been chosen (CLAUDE.md section 3)."""
+section 9."""
 
 from __future__ import annotations
 
@@ -10,6 +8,8 @@ import statistics
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
+
+from portfolio.performance import INCEPTION_INDEX
 
 
 @dataclass(frozen=True)
@@ -48,6 +48,20 @@ def since_inception_return(series: list[IndexPoint]) -> Decimal | None:
     if not series:
         return None
     return series[-1].index / series[0].index - 1
+
+
+def returns_from_index(series: list[IndexPoint], base: Decimal = INCEPTION_INDEX) -> list[Decimal]:
+    """Recovers the per-day return series that produced `series`, using
+    `base` (the inception index, e.g. 10000) as the implicit value just
+    before the first point — the same "prior close" convention the index
+    was built with, so this is a full-length series aligned 1:1 with
+    `series`, not one observation shorter."""
+    returns = []
+    previous = base
+    for point in series:
+        returns.append(point.index / previous - 1)
+        previous = point.index
+    return returns
 
 
 def period_returns(series: list[IndexPoint]) -> dict[str, Decimal | None]:
@@ -106,3 +120,43 @@ def annualised_volatility(daily_returns: list[Decimal]) -> Decimal | None:
     if len(daily_returns) < 2:
         return None
     return statistics.pstdev(daily_returns) * Decimal(252).sqrt()
+
+
+_MIN_PAIRED_OBSERVATIONS = 60  # CLAUDE.md section 9: beta and correlation need at least 60.
+
+
+def _pcovariance(x: list[Decimal], y: list[Decimal]) -> Decimal:
+    # statistics.covariance() uses fsum internally and rejects Decimal, so
+    # this is done by hand to stay in exact Decimal arithmetic.
+    mean_x = sum(x) / len(x)
+    mean_y = sum(y) / len(y)
+    return sum((xi - mean_x) * (yi - mean_y) for xi, yi in zip(x, y)) / len(x)
+
+
+def beta(portfolio_returns: list[Decimal], benchmark_returns: list[Decimal]) -> Decimal | None:
+    if len(portfolio_returns) != len(benchmark_returns):
+        return None
+    if len(portfolio_returns) < _MIN_PAIRED_OBSERVATIONS:
+        return None
+    benchmark_variance = statistics.pvariance(benchmark_returns)
+    if benchmark_variance == 0:
+        return None
+    return _pcovariance(portfolio_returns, benchmark_returns) / benchmark_variance
+
+
+def correlation(portfolio_returns: list[Decimal], benchmark_returns: list[Decimal]) -> Decimal | None:
+    if len(portfolio_returns) != len(benchmark_returns):
+        return None
+    if len(portfolio_returns) < _MIN_PAIRED_OBSERVATIONS:
+        return None
+    portfolio_stdev = statistics.pstdev(portfolio_returns)
+    benchmark_stdev = statistics.pstdev(benchmark_returns)
+    if portfolio_stdev == 0 or benchmark_stdev == 0:
+        return None
+    return _pcovariance(portfolio_returns, benchmark_returns) / (portfolio_stdev * benchmark_stdev)
+
+
+def excess_return(portfolio_return: Decimal | None, benchmark_return: Decimal | None) -> Decimal | None:
+    if portfolio_return is None or benchmark_return is None:
+        return None
+    return portfolio_return - benchmark_return
