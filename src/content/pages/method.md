@@ -34,7 +34,9 @@ _Still to be written._
 
 ## Trading policy
 
-_Still to be written._ The disclaimer refers readers to a trading policy on this page. Until the disclosure window is set out here, that reference is incomplete.
+Every trade is disclosed in the journal, with the date it was executed.
+
+I set and apply my own rules on when I trade relative to publishing a note. Those rules are not published here, and nothing in this repository enforces or checks them.
 
 ## The AI + Human process
 
