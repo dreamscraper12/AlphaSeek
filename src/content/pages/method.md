@@ -2,13 +2,15 @@
 title: Method
 ---
 
-Everything on this site is computed from a ledger of plain-text files in the [public repository](https://github.com/dreamscraper12/AlphaSeek). No figure on any page is typed in by hand. If you want to check a number, both the inputs and the code that turns them into that number are there.
+Every trade on this site is committed to the [public GitHub repository](https://github.com/dreamscraper12/AlphaSeek), and the returns are calculated by open code from that record, not typed in by me. Losses stay up. You don't have to trust me; you can check.
 
 ## Strategy
 
-High growth, high risk, unconstrained. Holdings may include ASX and US equities, ETFs, options including short-dated contracts, and crypto. The portfolio started with A$10,000 and is measured against the S&P 500 in Australian dollars.
+High growth, high risk, unconstrained. Holdings may include ASX and US equities, ETFs, options including short-dated contracts, and crypto. 
 
 Most of the portfolio, around 75%, sits in a core of 4–6 high-growth companies I've valued in depth and plan to hold for years. The rest is a satellite for higher-risk ideas, including early-stage companies, options and crypto, where I size small and expect big swings both ways. Every position, core or satellite, has a published thesis and the conditions that would prove me wrong.
+
+The portfolio started with A$10,000 and is measured against the S&P 500 in Australian dollars.
 
 ## Position sizing and review rules
 
@@ -18,21 +20,17 @@ I review every position after each earnings report against the conditions in its
 
 ## Performance methodology
 
+**Starting point.** The portfolio began with A$10,000 on 25 Sep 2026. The benchmark starts with the same A$10,000 on the same day.
+
 **Value.** Each business day, the portfolio is worth the market value of every holding plus cash in every currency, converted to Australian dollars.
 
-**Returns.** Returns are time-weighted. Each day's return removes any deposit or withdrawal before measuring, so paying more money in never shows up as performance. Those daily returns are chain-linked into an index starting at 10,000 on the close before the first deposit.
+**Benchmark.** The S&P 500, measured through the iShares S&P 500 ETF (ASX: IVV) in Australian dollars, with distributions reinvested. It's a real fund any Australian investor can buy, with its fees included. It's unhedged, so like my US holdings it moves with the Australian dollar.
 
-**Comparison.** The benchmark is the ASX-listed iShares S&P 500 ETF (IVV), measured as a total return in Australian dollars with distributions reinvested on the ex-date, and indexed from the same starting point in the same way. The dollar chart compares what the portfolio is actually worth against the same deposits put into IVV instead.
+**Returns.** Returns are time-weighted and calculated daily, so adding or withdrawing money doesn't distort them. The dollar chart compares my portfolio with what the same deposits would be worth in IVV.
 
-**What is included.** Returns are after trading costs and currency conversion costs, and before tax. Dividends, interest, fees and withholding tax change what the portfolio is worth, but are not treated as contributions.
+**Costs and tax.** Returns are after brokerage, currency conversion costs and US withholding tax on dividends. They are before Australian tax.
 
-**Timing.** ASX holdings use the close on the valuation day. US holdings use the close of the US session for that day. One daily AUD/USD rate is used throughout. Crypto uses the price at midnight UTC ending that day. The site revalues each weekday morning, Sydney time, once both markets have closed.
-
-**Weekends.** There are no valuation points on weekends. Crypto trades continuously, so a weekend move appears in Monday's value.
-
-**Gaps.** If a price is not available — a public holiday, say — the last available price is carried forward and marked stale, and the holding shows the date its price is actually from.
-
-**Options.** There is no free source of historical option prices, so options are valued from marks recorded by hand in the ledger, each citing where it came from. A written option carries negative value, because closing it costs money.
+**The record.** Every trade, price and calculation lives in a public GitHub repository, along with the data sources. Nothing is deleted, and every correction is logged with its reason.
 
 ## Trading policy
 
