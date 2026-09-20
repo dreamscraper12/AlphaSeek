@@ -8,11 +8,13 @@ Everything on this site is computed from a ledger of plain-text files in the [pu
 
 High growth, high risk, unconstrained. Holdings may include ASX and US equities, ETFs, options including short-dated contracts, and crypto. The portfolio started with A$10,000 and is measured against the S&P 500 in Australian dollars.
 
-_A fuller description of what I look for is still to be written._
+Most of the portfolio, around 75%, sits in a core of 4–6 high-growth companies I've valued in depth and plan to hold for years. The rest is a satellite for higher-risk ideas, including early-stage companies, options and crypto, where I size small and expect big swings both ways. Every position, core or satellite, has a published thesis and the conditions that would prove me wrong.
 
 ## Position sizing and review rules
 
-_Still to be written._
+Before buying, I estimate how far a position could fall if my thesis is wrong, and I size it so that loss would cost no more than 5% of the portfolio. A stock whose bear case is −50% gets up to 10%; one that could fall 80% gets about 6%.
+
+I review every position after each earnings report against the conditions in its note, and if one is met I sell, whatever the price. A 30% fall from cost doesn't force a sale; it forces a written re-underwrite in the journal within a week that answers one question: would I buy it today at this price? I trim when the price is more than 20% above my fair value estimate, and I sell when my updated estimate falls below the price.
 
 ## Performance methodology
 
