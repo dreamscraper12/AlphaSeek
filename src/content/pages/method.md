@@ -24,15 +24,15 @@ I review every position after each earnings report against the conditions in its
 
 **Value.** Each business day, the portfolio is worth the market value of every holding plus cash in every currency, converted to Australian dollars.
 
-**Weekends.** No valuation on weekends. Crypto never stops, so a weekend move turns up in Monday's number.
-
-**Missing prices.** When a market is shut and a day has no price, the last one carries forward, and the holding shows the date its price is really from.
-
 **Benchmark.** The S&P 500, measured through the iShares S&P 500 ETF (ASX: IVV) in Australian dollars, with distributions reinvested. It's a real fund any Australian investor can buy, with its fees included. It's unhedged, so like my US holdings it moves with the Australian dollar.
 
 **Returns.** Returns are time-weighted and calculated daily, so adding or withdrawing money doesn't distort them. The dollar chart compares my portfolio with what the same deposits would be worth in IVV.
 
 **Costs and tax.** Returns are after brokerage, currency conversion costs and US withholding tax on dividends. They are before Australian tax.
+
+**Weekends.** No valuation on weekends. Crypto never stops, so a weekend move turns up in Monday's number.
+
+**Missing prices.** When a market is shut and a day has no price, the last one carries forward, and the holding shows the date its price is really from.
 
 **The record.** Every trade, price and calculation lives in a public GitHub repository, along with the data sources. Nothing is deleted, and every correction is logged with its reason.
 
