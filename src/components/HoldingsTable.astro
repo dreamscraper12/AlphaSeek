@@ -1,6 +1,7 @@
 ---
 import { formatCurrency, formatPercent, formatSignedPercent } from '../lib/format';
 import type { Holding } from '../lib/data';
+import { url } from '../lib/url';
 
 interface Props {
   holdings: Holding[];
@@ -32,7 +33,7 @@ const columnCount = compact ? 3 : 7;
           <tr>
             <td>
               {h.note_slug ? (
-                <a href={`/research/${h.note_slug}`}>{h.instrument_id}</a>
+                <a href={url(`/research/${h.note_slug}`)}>{h.instrument_id}</a>
               ) : (
                 h.instrument_id
               )}

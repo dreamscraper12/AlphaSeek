@@ -4,6 +4,7 @@ import EquityCurve from '../components/EquityCurve.astro';
 import { formatDate, formatSignedPercent } from '../lib/format';
 import { getNavDaily, getBenchmarkDaily, getMetrics, getAttribution } from '../lib/data';
 import type { PeriodReturns } from '../lib/data';
+import { url } from '../lib/url';
 
 const navSeries = getNavDaily();
 const benchmarkSeries = getBenchmarkDaily();
@@ -173,7 +174,7 @@ const benchmark = metrics.benchmark;
 
   <p class="note">
     Beta and correlation need at least 60 daily observations. Full methodology: see the{' '}
-    <a href="/method">Method</a> page.
+    <a href={url("/method")}>Method</a> page.
   </p>
 </BaseLayout>
 

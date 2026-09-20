@@ -49,7 +49,7 @@ When a task depends on an unchecked item, stop and ask instead of choosing.
 - **Charts:** uPlot for time series, loaded as client islands. Every chart has a table alternative.
 - **Pipeline:** Python 3.12+, managed with uv; pandas, pydantic, pytest.
 - **Automation:** GitHub Actions.
-- **Hosting:** Cloudflare Pages or Vercel, deploying on push to `main`.
+- **Hosting:** GitHub Pages, deploying on push to `master` via `deploy.yml`. Served as a project page at `/AlphaSeek`, so internal links go through `src/lib/url.ts` rather than being written as raw absolute paths.
 - **Fonts:** self-hosted via Fontsource. No runtime requests to third parties.
 
 ## 5. Repository layout
@@ -90,6 +90,7 @@ When a task depends on an unchecked item, stop and ask instead of choosing.
 ├── scripts/lint-content.mjs  # advice-language lint (section 12)
 └── .github/workflows/
     ├── daily.yml
+    ├── deploy.yml
     └── ci.yml
 ```
 
@@ -422,4 +423,5 @@ Append rows; never delete.
 | 2026-09-20 | IBM Plex Mono for figures in tables      | Owner chose a deliberately technical read over the plainer alternative. Labels and headings stay in Plex Sans, so the avoid-list bar on monospace for labels still holds |
 | 2026-09-20 | `status.json` carries the inception deposit and date | The home headline ("A$10,000 invested on … is now worth …") was hardcoding the deposit figure, against ground rule 1. It now reads both from the ledger |
 | 2026-09-20 | ASX prices: Yahoo Finance, not Twelve Data | Verified against a live key: Twelve Data's free tier rejects ASX symbols ("available starting with the Pro or Venture plan"), and Pro is US$99/month — over 10% a year of a A$10,000 portfolio, for delayed AU data. Yahoo serves ASX free, in AUD, and answers ordinary requests, so unlike Stooq nothing is being circumvented. It is undocumented, so manual marks stay the fallback and the build fails loudly on a missing price |
+| 2026-09-20 | Hosting: GitHub Pages, not Cloudflare Pages or Vercel | The site is a static build that already lives on GitHub, so Pages needs no third-party account or repo linking and publishes from the same Actions run as everything else — including the commits `daily.yml` makes, so a new valuation deploys itself. Trade-off accepted: no per-branch preview deploys |
 | 2026-09-20 | Twelve Data kept for US equities/ETFs | Its free tier covers US markets properly, so the official API is used where it actually works and Yahoo is limited to where there is no free alternative. Routing is per-instrument via `price_source`, which the adapter design already supported |

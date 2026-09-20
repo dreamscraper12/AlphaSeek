@@ -6,6 +6,7 @@ import '@fontsource/source-serif-4/400.css';
 import '../styles/tokens.css';
 import { formatDate } from '../lib/format';
 import { getStatus } from '../lib/data';
+import { url } from '../lib/url';
 
 interface Props {
   title: string;
@@ -43,14 +44,14 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
-      <a class="site-name" href="/">Portfolio</a>
+      <a class="site-name" href={url("/")}>Portfolio</a>
       <nav aria-label="Primary">
         {
           nav.map((item) => (
             <a
-              href={item.href}
-              class:list={['nav-link', { current: path === item.href }]}
-              aria-current={path === item.href ? 'page' : undefined}
+              href={url(item.href)}
+              class:list={['nav-link', { current: path === url(item.href) }]}
+              aria-current={path === url(item.href) ? 'page' : undefined}
             >
               {item.label}
             </a>
@@ -65,7 +66,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
       <p class="disclaimer">
         General information only, not personal advice. This site isn't provided under an
         Australian financial services licence. I own the investments discussed. High risk.
-        <a href="/disclaimer">Full disclaimer</a>
+        <a href={url("/disclaimer")}>Full disclaimer</a>
       </p>
       <p class="meta">
         <span>

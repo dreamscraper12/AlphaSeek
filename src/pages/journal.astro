@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { formatCurrency, formatDate } from '../lib/format';
 import { getTrades } from '../lib/data';
+import { url } from '../lib/url';
 
 const trades = getTrades();
 ---
@@ -28,7 +29,7 @@ const trades = getTrades();
               <td class="numeric when">{formatDate(t.executed_at)}</td>
               <td>
                 {t.note_slug ? (
-                  <a href={`/research/${t.note_slug}`}>{t.instrument_id}</a>
+                  <a href={url(`/research/${t.note_slug}`)}>{t.instrument_id}</a>
                 ) : (
                   t.instrument_id
                 )}

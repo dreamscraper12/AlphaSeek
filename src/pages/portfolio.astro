@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import HoldingsTable from '../components/HoldingsTable.astro';
 import { formatCurrency, formatSignedCurrency } from '../lib/format';
 import { getHoldings, getClosedPositions, getStatus } from '../lib/data';
+import { url } from '../lib/url';
 
 const holdings = getHoldings();
 const closed = getClosedPositions();
@@ -66,7 +67,7 @@ const cashEntries = Object.entries(status.cash_by_currency);
             <tr>
               <td>
                 {c.note_slug ? (
-                  <a href={`/research/${c.note_slug}`}>{c.instrument_id}</a>
+                  <a href={url(`/research/${c.note_slug}`)}>{c.instrument_id}</a>
                 ) : (
                   c.instrument_id
                 )}
