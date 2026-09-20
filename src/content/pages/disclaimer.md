@@ -8,7 +8,7 @@ title: Disclaimer
 
 **My views only.** Opinions here are mine and don't represent any employer or organisation I'm associated with.
 
-**Conflicts.** I own the investments I write about and may buy or sell them, subject to the trading policy on the Method page. Every trade is disclosed in the journal.
+**Conflicts.** I own the investments I write about and may buy or sell them. Every trade is disclosed in the journal.
 
 **High risk.** This portfolio is deliberately concentrated and high risk. Options can expire worthless, written options can lose more than the premium received, and crypto is highly volatile. You could lose some or all of your money.
 
