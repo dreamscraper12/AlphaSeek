@@ -169,8 +169,6 @@ Options are the hardest part to price. Free sources rarely provide historical op
 - Manual marks are a first-class fallback, not an afterthought.
 - Option quotes usually can't be backfilled, so the daily job archives each day's quotes for open options in `data/cache/`. Back the archive up (see open decisions).
 
-Check each provider's terms. By default commit only derived outputs; commit raw prices only where redistribution is allowed. IBKR's own market data feed is for the owner's private use (order entry, reconciliation) only — it must not be used as the source for prices published on the public site unless its terms are re-checked and explicitly allow that.
-
 ## 9. Performance methodology
 
 - **NAV (AUD):** market value of every position × FX, plus cash in each currency × FX.
