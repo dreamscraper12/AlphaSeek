@@ -24,7 +24,7 @@ The site's value rests on trust. When a choice is between making the record look
 6. **Keep it static.** No server, database or user accounts. Client-side JavaScript only where it earns its place (charts, sensitivity tables).
 7. **Secrets** live in GitHub Actions secrets and a local `.env` (gitignored). Never commit them or print them in logs.
 8. **Don't name the owner's employer** anywhere in the repo or on the site unless the owner adds it.
-10. **Decimal arithmetic.** Parse ledger amounts as `Decimal`, never float. Round only for display.
+9. **Decimal arithmetic.** Parse ledger amounts as `Decimal`, never float. Round only for display.
 
 ## 3. Open decisions (owner to confirm)
 
