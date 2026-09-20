@@ -4,7 +4,7 @@ This file is the project brief and working rules for Claude Code. It also serves
 
 ## 1. What this project is
 
-A public website documenting a personal investment portfolio from inception, starting with A$10,000.
+A public website documenting a personal investment portfolio from inception, starting with A$10,000. 
 
 - **Strategy:** high growth, high risk, unconstrained. Holdings may include ASX and US equities, ETFs, options (including short-dated contracts) and crypto.
 - **Benchmark:** S&P 500 total return in AUD, using the ASX-listed iShares S&P 500 ETF (IVV).
