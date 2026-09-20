@@ -20,9 +20,13 @@ I review every position after each earnings report against the conditions in its
 
 ## Performance methodology
 
-**Starting point.** The portfolio began with A$10,000 on 25 Sep 2026. The benchmark starts with the same A$10,000 on the same day.
+**Starting point.** The portfolio starts with A$10,000 on 25 Sep 2026. The benchmark starts with the same A$10,000 on the same day.
 
 **Value.** Each business day, the portfolio is worth the market value of every holding plus cash in every currency, converted to Australian dollars.
+
+**Weekends.** No valuation on weekends. Crypto never stops, so a weekend move turns up in Monday's number.
+
+**Missing prices.** When a market is shut and a day has no price, the last one carries forward, and the holding shows the date its price is really from.
 
 **Benchmark.** The S&P 500, measured through the iShares S&P 500 ETF (ASX: IVV) in Australian dollars, with distributions reinvested. It's a real fund any Australian investor can buy, with its fees included. It's unhedged, so like my US holdings it moves with the Australian dollar.
 
