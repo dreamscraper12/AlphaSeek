@@ -35,7 +35,7 @@ When a task depends on an unchecked item, stop and ask instead of choosing.
 - [x] Broker: Interactive Brokers (confirmed 2026-09-19)
 - [ ] Crypto venue: whether IBKR's own crypto offering is used, or a separate exchange
 - [x] Data provider for ASX and US equities/ETFs, and for FX (confirmed 2026-09-19, ASX amended 2026-09-20): Twelve Data for **US** equities/ETFs, Yahoo Finance for **ASX**, Frankfurter (ECB rates) for FX, CoinGecko for crypto
-- [ ] Whether `holdings.json` should keep publishing per-unit prices. ASX prices come from Yahoo's undocumented endpoint, and section 8 says to commit raw prices only where redistribution is allowed — publishing only derived figures (weight, return, contribution) would stay clearly inside that rule
+- [ ] Whether `holdings.json` should keep publishing per-unit prices. 
 - [ ] Data source for option prices (US and ASX), or manual marks only
 - [ ] Trading policy: disclosure window (proposed: 24 hours) and minimum days between publishing a note and trading against it
 - [ ] Disclaimer wording reviewed by a financial services lawyer
