@@ -3,9 +3,10 @@ decision log 2026-09-19). Needs a free API key from twelvedata.com, read from
 TWELVE_DATA_API_KEY (a GitHub Actions secret in CI, .env locally — never
 committed, per section 2 ground rule 7).
 
-Symbol mapping and the exchange coverage this relies on haven't been
-verified against a live API key yet — smoke-test with a real ASX instrument
-before trusting this for a real valuation."""
+US only. Verified against a live key on 2026-09-20: the free tier returns
+US closes fine, but rejects ASX symbols with "This symbol is available
+starting with the Pro or Venture plan". ASX instruments go through
+portfolio.sources.yahoo instead."""
 
 from __future__ import annotations
 
@@ -19,10 +20,13 @@ from portfolio.sources.cache import PriceCache
 from portfolio.sources.http import Fetcher, fetch_json, urlopen_fetcher
 
 _EXCHANGE_BY_PREFIX = {
-    "ASX": "ASX",
     "NASDAQ": "NASDAQ",
     "NYSE": "NYSE",
 }
+
+# Enough that a rebuild with no cache still reaches inception. The cache is
+# gitignored, so CI always starts cold.
+_DEFAULT_OUTPUT_SIZE = 5000
 
 
 def _split_symbol(instrument_id: str) -> tuple[str, str]:
@@ -39,7 +43,7 @@ class TwelveDataSource:
         cache_dir: Path,
         api_key: str | None = None,
         fetch: Fetcher = urlopen_fetcher,
-        output_size: int = 90,
+        output_size: int = _DEFAULT_OUTPUT_SIZE,
     ) -> None:
         self._cache = PriceCache(cache_dir, "twelvedata")
         self._api_key = api_key if api_key is not None else os.environ.get("TWELVE_DATA_API_KEY")

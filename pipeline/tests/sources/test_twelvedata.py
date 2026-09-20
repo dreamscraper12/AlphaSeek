@@ -50,6 +50,18 @@ def test_second_lookup_uses_cache_not_a_second_fetch(tmp_path):
     assert len(calls) == 1
 
 
+def test_asx_is_rejected_because_the_free_tier_excludes_it(tmp_path):
+    # Verified against a live key on 2026-09-20: ASX symbols return "This
+    # symbol is available starting with the Pro or Venture plan". ASX goes
+    # through portfolio.sources.yahoo instead.
+    source = TwelveDataSource(tmp_path, api_key="k", fetch=lambda url: b"{}")
+    try:
+        source.get_price("ASX:IVV", date(2026, 1, 5))
+        assert False, "expected ValueError"
+    except ValueError:
+        pass
+
+
 def test_unknown_exchange_prefix_raises(tmp_path):
     source = TwelveDataSource(tmp_path, api_key="k", fetch=lambda url: b"{}")
     try:

@@ -22,6 +22,7 @@ from portfolio.sources.frankfurter import FrankfurterFxSource
 from portfolio.sources.manual import ManualMarkSource
 from portfolio.sources.router import RoutedPriceSource
 from portfolio.sources.twelvedata import TwelveDataSource
+from portfolio.sources.yahoo import YahooFinanceSource
 from portfolio.validate import validate_ledger
 
 
@@ -36,16 +37,22 @@ def _run_validate(ledger_dir: Path) -> int:
     return 0
 
 
-def _build_sources(ledger: Ledger, cache_dir: Path) -> tuple[RoutedPriceSource, FrankfurterFxSource, TwelveDataSource]:
+def _build_sources(
+    ledger: Ledger, cache_dir: Path
+) -> tuple[RoutedPriceSource, FrankfurterFxSource, YahooFinanceSource]:
     manual = ManualMarkSource(ledger.manual_marks)
-    twelvedata = TwelveDataSource(cache_dir)
-    providers = {"twelvedata": twelvedata, "coingecko": CoinGeckoSource(cache_dir)}
+    yahoo = YahooFinanceSource(cache_dir)
+    providers = {
+        "twelvedata": TwelveDataSource(cache_dir),  # US equities and ETFs
+        "yahoo": yahoo,  # ASX; Twelve Data's free tier excludes it
+        "coingecko": CoinGeckoSource(cache_dir),
+    }
     price_source = RoutedPriceSource(ledger.instruments, manual, providers)
     fx_source = FrankfurterFxSource(cache_dir)
     # IVV isn't a ledger instrument (it's the benchmark, not something owned),
     # so it can't go through the router, which looks up price_source by
-    # instrument — it's always priced directly via Twelve Data.
-    return price_source, fx_source, twelvedata
+    # instrument. It's ASX-listed, so it's priced directly via Yahoo.
+    return price_source, fx_source, yahoo
 
 
 def _write_empty_outputs(generated_dir: Path) -> None:

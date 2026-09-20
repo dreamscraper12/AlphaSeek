@@ -34,7 +34,8 @@ When a task depends on an unchecked item, stop and ask instead of choosing.
 - [ ] Inception date
 - [x] Broker: Interactive Brokers (confirmed 2026-09-19)
 - [ ] Crypto venue: whether IBKR's own crypto offering is used, or a separate exchange
-- [x] Data provider for ASX and US equities/ETFs, and for FX (confirmed 2026-09-19): Twelve Data for equities/ETFs, Frankfurter (ECB rates) for FX, CoinGecko for crypto
+- [x] Data provider for ASX and US equities/ETFs, and for FX (confirmed 2026-09-19, ASX amended 2026-09-20): Twelve Data for **US** equities/ETFs, Yahoo Finance for **ASX**, Frankfurter (ECB rates) for FX, CoinGecko for crypto
+- [ ] Whether `holdings.json` should keep publishing per-unit prices. ASX prices come from Yahoo's undocumented endpoint, and section 8 says to commit raw prices only where redistribution is allowed — publishing only derived figures (weight, return, contribution) would stay clearly inside that rule
 - [ ] Data source for option prices (US and ASX), or manual marks only
 - [ ] Trading policy: disclosure window (proposed: 24 hours) and minimum days between publishing a note and trading against it
 - [ ] Disclaimer wording reviewed by a financial services lawyer
@@ -420,3 +421,5 @@ Append rows; never delete.
 | 2026-09-19 | IVV distribution history: owner-maintained, sourced from iShares | Free APIs don't carry ASX ETF distribution history; iShares publishes it officially. Recorded in `data/benchmark/ivv_distributions.csv`, maintained like a manual mark rather than fetched automatically |
 | 2026-09-20 | IBM Plex Mono for figures in tables      | Owner chose a deliberately technical read over the plainer alternative. Labels and headings stay in Plex Sans, so the avoid-list bar on monospace for labels still holds |
 | 2026-09-20 | `status.json` carries the inception deposit and date | The home headline ("A$10,000 invested on … is now worth …") was hardcoding the deposit figure, against ground rule 1. It now reads both from the ledger |
+| 2026-09-20 | ASX prices: Yahoo Finance, not Twelve Data | Verified against a live key: Twelve Data's free tier rejects ASX symbols ("available starting with the Pro or Venture plan"), and Pro is US$99/month — over 10% a year of a A$10,000 portfolio, for delayed AU data. Yahoo serves ASX free, in AUD, and answers ordinary requests, so unlike Stooq nothing is being circumvented. It is undocumented, so manual marks stay the fallback and the build fails loudly on a missing price |
+| 2026-09-20 | Twelve Data kept for US equities/ETFs | Its free tier covers US markets properly, so the official API is used where it actually works and Yahoo is limited to where there is no free alternative. Routing is per-instrument via `price_source`, which the adapter design already supported |
