@@ -2,7 +2,7 @@
 title: Method
 ---
 
-Every trade on this site is committed to the [public GitHub repository](https://github.com/dreamscraper12/AlphaSeek), and the returns are calculated by open code from that record, not typed in by me. Losses stay up. You don't have to trust me; you can check.
+Every trade on this site is committed to a [public GitHub repository](https://github.com/dreamscraper12/AlphaSeek), and the returns are calculated by open code from that record, not typed in by me. Losses stay up. You don't have to trust me; you can check.
 
 ## Strategy
 
