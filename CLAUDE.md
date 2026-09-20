@@ -30,16 +30,16 @@ The site's value rests on trust. When a choice is between making the record look
 
 When a task depends on an unchecked item, stop and ask instead of choosing.
 
-- [ ] Site name and domain
+- [x] Site name: AlphaSeek (confirmed 2026-09-20). Domain deferred — the site is served from GitHub Pages at `dreamscraper12.github.io/AlphaSeek` until a custom domain is chosen
 - [ ] Inception date
 - [x] Broker: Interactive Brokers (confirmed 2026-09-19)
 - [ ] Crypto venue: whether IBKR's own crypto offering is used, or a separate exchange
 - [x] Data provider for ASX and US equities/ETFs, and for FX (confirmed 2026-09-19, ASX amended 2026-09-20): Twelve Data for **US** equities/ETFs, Yahoo Finance for **ASX**, Frankfurter (ECB rates) for FX, CoinGecko for crypto
-- [ ] Whether `holdings.json` should keep publishing per-unit prices. 
+- [x] `holdings.json` keeps publishing per-unit prices (confirmed 2026-09-20)
 - [ ] Data source for option prices (US and ASX), or manual marks only
-- [ ] Trading policy: disclosure window (proposed: 24 hours) and minimum days between publishing a note and trading against it
-- [ ] Disclaimer wording reviewed by a financial services lawyer
-- [ ] Employer compliance approval obtained
+- [x] Trading policy: the owner sets and applies the disclosure window; it is not enforced or recorded in this repo (confirmed 2026-09-20). The Method page still needs the window stated, since the disclaimer refers readers to it
+- [x] Disclaimer: the owner accepted the section 15 draft wording as-is. No financial services lawyer review was obtained (confirmed 2026-09-20)
+- [x] Employer compliance approval obtained (confirmed 2026-09-20)
 - [ ] Analytics: none, or a cookieless option
 - [ ] Where to back up the option quote archive (see section 8)
 
@@ -423,3 +423,8 @@ Append rows; never delete.
 | 2026-09-20 | ASX prices: Yahoo Finance, not Twelve Data | Verified against a live key: Twelve Data's free tier rejects ASX symbols ("available starting with the Pro or Venture plan"), and Pro is US$99/month — over 10% a year of a A$10,000 portfolio, for delayed AU data. Yahoo serves ASX free, in AUD, and answers ordinary requests, so unlike Stooq nothing is being circumvented. It is undocumented, so manual marks stay the fallback and the build fails loudly on a missing price |
 | 2026-09-20 | Hosting: GitHub Pages, not Cloudflare Pages or Vercel | The site is a static build that already lives on GitHub, so Pages needs no third-party account or repo linking and publishes from the same Actions run as everything else — including the commits `daily.yml` makes, so a new valuation deploys itself. Trade-off accepted: no per-branch preview deploys |
 | 2026-09-20 | Twelve Data kept for US equities/ETFs | Its free tier covers US markets properly, so the official API is used where it actually works and Yahoo is limited to where there is no free alternative. Routing is per-instrument via `price_source`, which the adapter design already supported |
+| 2026-09-20 | Site name: AlphaSeek; domain deferred | Owner's choice, already matching the repo. Raised with the owner that Seeking Alpha is an established site in the same field and that the name would sit alongside the other compliance questions; owner confirmed regardless. No custom domain yet: GitHub Pages serves the site meanwhile, and `src/lib/url.ts` makes a later move a base-path change |
+| 2026-09-20 | `holdings.json` keeps publishing per-unit prices | Owner's call. Showing the price a holding's return was computed from keeps each row checkable against the ledger, which is the standard section 1 sets when verifiability and caution pull apart |
+| 2026-09-20 | Trading policy handled by the owner, not the repo | Owner sets and applies the disclosure window personally; no window is encoded, enforced or checked in this repo. Phase 2's disclosure-lag feature would measure against a stated window, so it needs one on the Method page before it can mean anything |
+| 2026-09-20 | Disclaimer published without legal review | Owner judged the section 15 draft sufficient on the basis that it states the site is not financial advice and documents a personal portfolio. Recorded plainly because it is a departure from the original plan to have a financial services lawyer review the wording, and because a self-declared "not advice" notice does not by itself determine how the content is characterised |
+| 2026-09-20 | Employer compliance approval obtained | Owner confirmed. Not evidenced in this repo, by design — nothing about the employer is recorded here (ground rule 8) |

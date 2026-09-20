@@ -15,6 +15,7 @@ interface Props {
 const { title } = Astro.props;
 const status = getStatus();
 
+const SITE_NAME = 'AlphaSeek';
 const REPO_URL = 'https://github.com/dreamscraper12/AlphaSeek';
 
 const nav = [
@@ -33,7 +34,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
+    <title>{title === SITE_NAME ? title : `${title} — ${SITE_NAME}`}</title>
     <script is:inline>
       try {
         const stored = localStorage.getItem('theme');
@@ -44,7 +45,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
-      <a class="site-name" href={url("/")}>Portfolio</a>
+      <a class="site-name" href={url("/")}>AlphaSeek</a>
       <nav aria-label="Primary">
         {
           nav.map((item) => (
