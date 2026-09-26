@@ -16,7 +16,6 @@ const FORBIDDEN = [
   'you should buy',
   'you should sell',
   'guaranteed',
-  'risk-free',
   "can't lose",
   'sure thing',
   'to the moon',

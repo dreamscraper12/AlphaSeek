@@ -4,7 +4,7 @@ This file is the project brief and working rules for Claude Code. It also serves
 
 ## 1. What this project is
 
-A public website documenting a personal investment portfolio from inception, starting with A$10,000. 
+A public website documenting a personal investment portfolio from inception, starting with A$10,000. The owner publishes anonymously (see ground rule 8).
 
 - **Strategy:** high growth, high risk, unconstrained. Holdings may include ASX and US equities, ETFs, options (including short-dated contracts) and crypto.
 - **Benchmark:** S&P 500 total return in AUD, using the ASX-listed iShares S&P 500 ETF (IVV).
@@ -23,21 +23,21 @@ The site's value rests on trust. When a choice is between making the record look
 5. **Ask the owner before** changing the performance methodology or benchmark, editing disclaimer text, adding a paid service or new data source, adding analytics or cookies, or doing anything that changes figures already published.
 6. **Keep it static.** No server, database or user accounts. Client-side JavaScript only where it earns its place (charts, sensitivity tables).
 7. **Secrets** live in GitHub Actions secrets and a local `.env` (gitignored). Never commit them or print them in logs.
-8. **Don't name the owner's employer** anywhere in the repo or on the site unless the owner adds it.
+8. **Keep the owner anonymous.** Refer to them only as "the owner" in the repo and "I" on the site. Never record their name, email, location, employer, job or professional credentials in files, commit messages, generated output or page copy, and don't infer or add any of these from context. Commits should use a GitHub noreply address, not a personal one. If something identifying turns up, flag it to the owner rather than working around it.
 9. **Decimal arithmetic.** Parse ledger amounts as `Decimal`, never float. Round only for display.
 
 ## 3. Open decisions (owner to confirm)
 
 When a task depends on an unchecked item, stop and ask instead of choosing.
 
-- [x] Site name: AlphaSeek (confirmed 2026-09-20). Domain deferred — the site is served from GitHub Pages at `dreamscraper12.github.io/AlphaSeek` until a custom domain is chosen
+- [x] Site name: AlphaSeek (confirmed 2026-09-20). Domain deferred — the site is served as a GitHub Pages project page (URL set in `astro.config.mjs`) until a custom domain is chosen
 - [ ] Inception date
 - [x] Broker: Interactive Brokers (confirmed 2026-09-19)
 - [ ] Crypto venue: whether IBKR's own crypto offering is used, or a separate exchange
 - [x] Data provider for ASX and US equities/ETFs, and for FX (confirmed 2026-09-19, ASX amended 2026-09-20): Twelve Data for **US** equities/ETFs, Yahoo Finance for **ASX**, Frankfurter (ECB rates) for FX, CoinGecko for crypto
 - [x] `holdings.json` keeps publishing per-unit prices (confirmed 2026-09-20)
 - [ ] Data source for option prices (US and ASX), or manual marks only
-- [x] Trading policy: the owner sets and applies the disclosure window; it is not enforced or recorded in this repo (confirmed 2026-09-20). The Method page still needs the window stated, since the disclaimer refers readers to it
+- [x] Trading policy: the owner sets and applies the disclosure window; it is not enforced or recorded in this repo (confirmed 2026-09-20). The Method page's trading policy section says so
 - [x] Disclaimer: the owner accepted the section 15 draft wording as-is. No financial services lawyer review was obtained (confirmed 2026-09-20)
 - [x] Employer compliance approval obtained (confirmed 2026-09-20)
 - [ ] Analytics: none, or a cookieless option
@@ -57,6 +57,8 @@ When a task depends on an unchecked item, stop and ask instead of choosing.
 ```
 /
 ├── CLAUDE.md
+├── README.md
+├── .env.example              # names of the secrets a local build needs; no values
 ├── astro.config.mjs
 ├── package.json
 ├── src/
@@ -194,7 +196,7 @@ Outputs: `nav_daily.json`, `benchmark_daily.json`, `holdings.json`, `closed_posi
 **daily.yml**
 - Schedule `0 23 * * 1-5` (UTC, about 9–10am Sydney, after both the ASX and US closes for that day), plus manual `workflow_dispatch`.
 - Values the latest Sydney business day on which all markets have closed. Idempotent: rerunning produces the same output.
-- Runs build and tests; if generated files changed, commits `data: valuation for YYYY-MM-DD` and pushes, which triggers a deploy.
+- Runs build and tests; if generated files changed, commits `data: valuation for YYYY-MM-DD` (the valuation date D, not the run date) and pushes, then deploys. A push made with the default `GITHUB_TOKEN` does not trigger other workflows, so the deploy must be started explicitly (e.g. `deploy.yml` on `workflow_run` or `workflow_call`), not left to the push.
 - Logs options expiring within 5 business days.
 - GitHub cron can run late, so the job must not depend on its exact run time.
 
@@ -218,7 +220,7 @@ Warn on:
 
 ## 12. Language rules (compliance)
 
-The site is a personal journal, not advice to readers. `scripts/lint-content.mjs` fails `npm run check` if content or UI copy contains, case-insensitively: "buy rating", "sell rating", "hold rating", "strong buy", "price target", "target price", "you should buy", "you should sell", "guaranteed", "risk-free", "can't lose", "sure thing", "to the moon".
+The site is a personal journal, not advice to readers. `scripts/lint-content.mjs` fails `npm run check` if content or UI copy contains, case-insensitively: "buy rating", "sell rating", "hold rating", "strong buy", "price target", "target price", "you should buy", "you should sell", "guaranteed", "can't lose", "sure thing", "to the moon".
 
 Use instead: "my fair value estimate", "I bought", "I own", "I sold", "what would prove me wrong". Quoting a third party is allowed with an allow comment on the preceding line that gives the reason (`{/* lint-allow: quoting X */}` in MDX).
 
@@ -239,7 +241,7 @@ The headline sentence must read naturally whether the portfolio is up or down ("
 Home wireframe (figures illustrative only):
 
 ```
-Site name                      Portfolio  Performance  Research  Journal  Method
+AlphaSeek                      Portfolio  Performance  Research  Journal  Method
 
 A$10,000 invested on 3 Nov 2026 is now worth A$11,420.
 The same amount in the S&P 500 is worth A$10,860.
@@ -304,7 +306,7 @@ Body sections, in order: summary (three sentences at most), thesis, valuation (`
 
 The snapshot panel shows: published date, price at publication, current price with its "as of" date, the owner's fair value estimate, implied upside, current position size, and status. Label the estimate "My fair value estimate", never "target".
 
-## 15. Disclaimer (DRAFT, pending legal review)
+## 15. Disclaimer (owner-approved; not legally reviewed)
 
 Do not change this wording without owner approval.
 
@@ -320,7 +322,7 @@ Full version for `/disclaimer`:
 
 **My views only.** Opinions here are mine and don't represent any employer or organisation I'm associated with.
 
-**Conflicts.** I own the investments I write about and may buy or sell them, subject to the trading policy on the Method page. Every trade is disclosed in the journal.
+**Conflicts.** I own the investments I write about and may buy or sell them. Every trade is disclosed in the journal.
 
 **High risk.** This portfolio is deliberately concentrated and high risk. Options can expire worthless, written options can lose more than the premium received, and crypto is highly volatile. You could lose some or all of your money.
 
@@ -395,7 +397,7 @@ Done when: with only the inception deposit in the ledger, the site builds, deplo
 **Phase 2: trust and depth**
 - Option price adapter and daily quote archive.
 - Broker reconciliation, with "Reconciled with broker statement on {date}" on `/portfolio`.
-- Disclosure lag: CI finds the commit that first added each trade and shows the gap between execution and disclosure in the journal, flagging anything outside the policy window. Commit times are self-reported, so present this as transparency, not proof.
+- Disclosure lag: CI finds the commit that first added each trade and shows the gap between execution and disclosure in the journal. No policy window is stated in the repo (see the 2026-09-20 trading policy decision), so show the gap without flagging; add flagging only if the owner publishes a window. Commit times are self-reported, so present this as transparency, not proof.
 - AI vs Human scoreboard on `/method`: for notes with `ai_fair_value`, compare both estimates with the price after 6 and 12 months. Say plainly that this is an imperfect measure of valuation quality.
 - Attribution chart, interactive sensitivity grid, RSS feed, Open Graph images per note, email signup (ask the owner which provider).
 
@@ -407,7 +409,7 @@ Done when: with only the inception deposit in the ledger, the site builds, deplo
 Append rows; never delete.
 
 | Date       | Decision                                  | Reason                                                   |
-|------------|--------------------------------------------|-----------------------------------------------------------|
+|------------|-------------------------------------------|----------------------------------------------------------|
 | 2026-09-19 | Benchmark: IVV total return in AUD        | Base currency is AUD; investable; net of fees            |
 | 2026-09-19 | Time-weighted return, end-of-day flows    | Contributions shouldn't distort reported returns         |
 | 2026-09-19 | Shadow benchmark for dollar comparisons   | Shows the same dollars in the S&P 500                    |
@@ -428,3 +430,7 @@ Append rows; never delete.
 | 2026-09-20 | Trading policy handled by the owner, not the repo | Owner sets and applies the disclosure window personally; no window is encoded, enforced or checked in this repo. Phase 2's disclosure-lag feature would measure against a stated window, so it needs one on the Method page before it can mean anything |
 | 2026-09-20 | Disclaimer published without legal review | Owner judged the section 15 draft sufficient on the basis that it states the site is not financial advice and documents a personal portfolio. Recorded plainly because it is a departure from the original plan to have a financial services lawyer review the wording, and because a self-declared "not advice" notice does not by itself determine how the content is characterised |
 | 2026-09-20 | Employer compliance approval obtained | Owner confirmed. Not evidenced in this repo, by design — nothing about the employer is recorded here (ground rule 8) |
+| 2026-09-26 | Owner stays anonymous (ground rule 8 widened) | Owner's choice. Rule 8 previously covered only the employer; it now covers name, email, location, job and credentials |
+| 2026-09-26 | Git history rewritten to remove identifying details | Owner's call. Earlier commits carried a personal author email and lines in this file that identified the owner. Commit emails were replaced with a GitHub noreply address and those lines removed from every past version; all other content, dates and messages are unchanged. Commit hashes changed as a result. A deliberate exception to git history as the audit trail, recorded here so it is not silent |
+| 2026-09-26 | Section 15 synced to the published disclaimer | The owner had already edited `src/content/pages/disclaimer.md` (removing the trademark line and the trading-policy reference in the conflicts paragraph) without updating this file. No wording changed on the site |
+| 2026-09-26 | "risk-free" removed from the content lint | Owner's call. "Risk-free rate" is a standard input to the WACC and CAPM figures every DCF note reports, so the ban blocked ordinary valuation language. The remaining phrases still catch promissory copy such as "guaranteed" and "can't lose" |
