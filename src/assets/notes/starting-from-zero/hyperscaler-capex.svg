@@ -1,0 +1,182 @@
+<svg stroke-linejoin="round" stroke-linecap="butt" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 576 316.8" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <g>
+  <g>
+   <path d="M 0 316.8 
+L 576 316.8 
+L 576 0 
+L 0 0 
+z
+" style="fill: var(--bg)"/>
+  </g>
+  <g>
+   <g>
+    <path d="M 57.9 265.276 
+L 564.12 265.276 
+L 564.12 27.96 
+L 57.9 27.96 
+z
+" style="fill: var(--bg)"/>
+   </g>
+   <g>
+    <g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="119.26" y="277.134281" transform="rotate(-0 119.26 277.134281)">2024</text>
+     </g>
+    </g>
+    <g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="247.093333" y="277.134281" transform="rotate(-0 247.093333 277.134281)">2025</text>
+     </g>
+    </g>
+    <g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="374.926667" y="277.134281" transform="rotate(-0 374.926667 277.134281)">2026E</text>
+     </g>
+    </g>
+    <g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="502.76" y="277.134281" transform="rotate(-0 502.76 277.134281)">2027E</text>
+     </g>
+    </g>
+   </g>
+   <g>
+    <g>
+     <g>
+      <path d="M 57.9 265.276 
+L 564.12 265.276 
+" clip-path="url(#p947add94f4)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="54.4" y="269.455141" transform="rotate(-0 54.4 269.455141)">0</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 57.9 220.072952 
+L 564.12 220.072952 
+" clip-path="url(#p947add94f4)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="54.4" y="224.252093" transform="rotate(-0 54.4 224.252093)">200</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 57.9 174.869905 
+L 564.12 174.869905 
+" clip-path="url(#p947add94f4)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="54.4" y="179.049045" transform="rotate(-0 54.4 179.049045)">400</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 57.9 129.666857 
+L 564.12 129.666857 
+" clip-path="url(#p947add94f4)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="54.4" y="133.845998" transform="rotate(-0 54.4 133.845998)">600</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 57.9 84.46381 
+L 564.12 84.46381 
+" clip-path="url(#p947add94f4)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="54.4" y="88.64295" transform="rotate(-0 54.4 88.64295)">800</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 57.9 39.260762 
+L 564.12 39.260762 
+" clip-path="url(#p947add94f4)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="54.4" y="43.439903" transform="rotate(-0 54.4 43.439903)">1000</text>
+     </g>
+    </g>
+    <g>
+     <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="20.117344" y="146.618" transform="rotate(-90 20.117344 146.618)">Capex, US$bn</text>
+    </g>
+   </g>
+   <g>
+    <path d="M 80.91 265.276 
+L 157.61 265.276 
+L 157.61 214.196556 
+L 80.91 214.196556 
+z
+" clip-path="url(#p947add94f4)" style="fill: var(--chart-secondary)"/>
+   </g>
+   <g>
+    <path d="M 208.743333 265.276 
+L 285.443333 265.276 
+L 285.443333 172.609752 
+L 208.743333 172.609752 
+z
+" clip-path="url(#p947add94f4)" style="fill: var(--chart-secondary)"/>
+   </g>
+   <g>
+    <path d="M 336.576667 265.276 
+L 413.276667 265.276 
+L 413.276667 99.719838 
+L 336.576667 99.719838 
+z
+" clip-path="url(#p947add94f4)" style="fill: var(--muted)"/>
+   </g>
+   <g>
+    <path d="M 464.41 265.276 
+L 541.11 265.276 
+L 541.11 54.06476 
+L 464.41 54.06476 
+z
+" clip-path="url(#p947add94f4)" style="fill: var(--muted)"/>
+   </g>
+   <g>
+    <path d="M 57.9 265.276 
+L 564.12 265.276 
+" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="119.26" y="210.806328" transform="rotate(-0 119.26 210.806328)">US$226bn</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="247.093333" y="169.219524" transform="rotate(-0 247.093333 169.219524)">US$410bn</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="374.926667" y="96.32961" transform="rotate(-0 374.926667 96.32961)">US$732bn</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="502.76" y="50.674531" transform="rotate(-0 502.76 50.674531)">US$934bn</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 13px; text-anchor: start; fill: var(--ink)" x="57.9" y="21.96" transform="rotate(-0 57.9 21.96)">Big Tech capex is on track to quadruple from 2024 to 2027</text>
+   </g>
+  </g>
+  <g>
+   <text style="font-size: 8.5px; text-anchor: start; fill: var(--muted)" x="5.76" y="302.544" transform="rotate(-0 5.76 302.544)">Microsoft, Alphabet, Amazon and Meta combined. 2026E = company guidance; 2027E = projection.</text>
+  </g>
+  <g>
+   <text style="font-size: 8.5px; text-anchor: start; fill: var(--muted)" x="5.76" y="313.632" transform="rotate(-0 5.76 313.632)">Sources: I/O Fund (FactSet, Goldman Sachs Research), ValueAdd VC.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p947add94f4">
+   <rect x="57.9" y="27.96" width="506.22" height="237.316"/>
+  </clipPath>
+ </defs>
+</svg>

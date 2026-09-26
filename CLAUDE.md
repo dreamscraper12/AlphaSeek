@@ -63,9 +63,10 @@ When a task depends on an unchecked item, stop and ask instead of choosing.
 ├── package.json
 ├── src/
 │   ├── content/
-│   │   ├── notes/            # research notes (MDX)
+│   │   ├── notes/            # research notes (MDX): company notes and posts
 │   │   └── pages/            # method, about, disclaimer (MD)
-│   ├── components/           # EquityCurve, HoldingsTable, SnapshotPanel, SensitivityGrid, ...
+│   ├── assets/notes/<slug>/  # charts used by a note, inlined as SVG
+│   ├── components/           # EquityCurve, HoldingsTable, SnapshotPanel, SensitivityGrid, ChartFigure, ...
 │   ├── layouts/
 │   ├── lib/                  # formatting, loading generated JSON
 │   ├── pages/
@@ -229,7 +230,7 @@ Use instead: "my fair value estimate", "I bought", "I own", "I sold", "what woul
 - `/` Home: one plain sentence with the headline result, the equity curve (portfolio vs shadow benchmark), a compact holdings list, and the latest trades and notes.
 - `/portfolio`: holdings (instrument, type, weight, average cost, price, return, contribution, link to note). Options also show underlying, strike, expiry and days to expiry. Cash by currency. Closed positions with realised P&L and a link to the exit post-mortem.
 - `/performance`: returns table vs benchmark, drawdown chart, metrics, attribution, and a short methodology summary linking to `/method`.
-- `/research` and `/research/[slug]`: notes, newest first, filterable by status.
+- `/research` and `/research/[slug]`: notes, newest first, filterable by status. Posts are listed alongside company notes and labelled "Post".
 - `/journal`: every trade, newest first, generated from `trades.json` and linked to notes.
 - `/method`: strategy, position sizing and review rules, performance methodology in plain English, trading policy, the AI + Human process, data sources, and the decision log.
 - `/about` and `/disclaimer`.
@@ -262,7 +263,14 @@ Last valued 4 Jun 2027                    View the ledger
 
 ## 14. Research notes
 
-Frontmatter, validated by a Zod schema in the content config (values below are illustrative):
+A note has one of two types, set by `type` in the frontmatter:
+
+- **Company note** (`type: company`, the default when `type` is omitted): what the owner owns, or researched and passed on, and why. Everything below applies.
+- **Post** (`type: post`): anything else, such as market outlooks, letters and process write-ups. Required: `title`, `published_at`, `ai` (`used_for`, `human`). Optional: `summary`. No instrument, prices, fair value or status, so no snapshot panel. The AI disclosure still appears on every post, and the section 12 language rules apply as usual.
+
+Charts in a note are SVGs in `src/assets/notes/<slug>/`, coloured with the tokens as CSS variables (`var(--ink)`, `var(--muted)`, `var(--rule)`, `var(--bg)`, `var(--accent)`) so they follow the theme, and placed with `ChartFigure`, which adds the table alternative. The section 16 accent rule applies: market data is neutral; only the owner's own figures and estimates use the accent.
+
+Company note frontmatter, validated by a Zod schema in the content config (values below are illustrative):
 
 ```yaml
 title: Why I own TEST:AAA
@@ -434,3 +442,5 @@ Append rows; never delete.
 | 2026-09-26 | Git history rewritten to remove identifying details | Owner's call. Earlier commits carried a personal author email and lines in this file that identified the owner. Commit emails were replaced with a GitHub noreply address and those lines removed from every past version; all other content, dates and messages are unchanged. Commit hashes changed as a result. A deliberate exception to git history as the audit trail, recorded here so it is not silent |
 | 2026-09-26 | Section 15 synced to the published disclaimer | The owner had already edited `src/content/pages/disclaimer.md` (removing the trademark line and the trading-policy reference in the conflicts paragraph) without updating this file. No wording changed on the site |
 | 2026-09-26 | "risk-free" removed from the content lint | Owner's call. "Risk-free rate" is a standard input to the WACC and CAPM figures every DCF note reports, so the ban blocked ordinary valuation language. The remaining phrases still catch promissory copy such as "guaranteed" and "can't lose" |
+| 2026-09-26 | Research notes gain a second type, `post` | Owner's call, for writing that isn't about a single holding, starting with the first outlook post. Kept in `/research` rather than a separate Letters section so the nav stays as it is; revisit if posts come to outnumber company notes. Company notes are unchanged and remain the default |
+| 2026-09-26 | MDX integration added | Section 14 specifies MDX notes, but `@astrojs/mdx` had never been installed, so no note could have rendered. Found while publishing the first post |

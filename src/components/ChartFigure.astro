@@ -1,0 +1,69 @@
+---
+// A static chart in a note, inlined so it follows the site theme, with the
+// table alternative every chart needs (CLAUDE.md section 17). The first
+// column holds labels; the rest are figures and align right.
+interface Props {
+  svg: (props: Record<string, unknown>) => unknown;
+  label: string;
+  columns: string[];
+  rows: string[][];
+}
+
+const { svg: Svg, label, columns, rows } = Astro.props;
+---
+
+<figure class="chart-figure">
+  <Svg role="img" aria-label={label} />
+  <details>
+    <summary>Chart data</summary>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            {columns.map((column, i) => <th scope="col" class:list={{ numeric: i > 0 }}>{column}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((row) => (
+              <tr>
+                {row.map((cell, i) =>
+                  i === 0 ? <th scope="row">{cell}</th> : <td class="numeric">{cell}</td>,
+                )}
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </details>
+</figure>
+
+<style>
+  .chart-figure {
+    --chart-secondary: color-mix(in srgb, var(--muted) 55%, var(--bg));
+    margin: var(--space-5) 0;
+    font-family: var(--font-ui);
+  }
+
+  .chart-figure :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  details {
+    font-size: var(--text-sm);
+    margin-top: var(--space-2);
+  }
+
+  summary {
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  th[scope='row'] {
+    font-weight: 400;
+    text-align: left;
+  }
+</style>

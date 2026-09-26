@@ -12,8 +12,8 @@ const notes = (await getCollection('notes')).sort(
 <BaseLayout title="Research">
   <h1>Research</h1>
   <p class="note">
-    What I own and why, newest first. Every note discloses where AI helped and where the
-    judgement was mine.
+    What I own and why, and posts on how I see markets, newest first. Every note discloses
+    where AI helped and where the judgement was mine.
   </p>
 
   <ul class="notes-list">
@@ -23,7 +23,7 @@ const notes = (await getCollection('notes')).sort(
           <a href={url(`/research/${note.id}`)}>{note.data.title}</a>
           <span class="meta">
             <span class="when">{formatDate(note.data.published_at)}</span>
-            <span class="status">{note.data.status}</span>
+            <span class="status">{note.data.type === 'post' ? 'Post' : note.data.status}</span>
           </span>
         </li>
       ))

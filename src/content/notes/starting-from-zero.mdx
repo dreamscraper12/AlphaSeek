@@ -1,0 +1,127 @@
+---
+title: "Starting from zero: why this site exists and where I think markets are"
+published_at: 2026-09-26T15:46:00+10:00
+type: post
+summary: "Why I'm running a real portfolio in public, how I invest, and why I'm starting in cash."
+ai:
+  used_for: [gathering and summarising market data, producing the charts, first drafts]
+  human: [the macro view, scenario probabilities, when and how to deploy cash]
+---
+
+import ChartFigure from '../../components/ChartFigure.astro';
+import Yields from '../../assets/notes/starting-from-zero/global-10y-yields.svg';
+import PolicyRates from '../../assets/notes/starting-from-zero/policy-rates.svg';
+import Capex from '../../assets/notes/starting-from-zero/hyperscaler-capex.svg';
+
+## Why this site exists
+
+I'm building a real portfolio from A$10,000 and documenting everything in public: every trade, every valuation model, every mistake. Returns are measured against the S&P 500, and the full record lives in a public GitHub repository, so you don't have to take my word for any of it.
+
+The research is AI-assisted and human-led. AI does the heavy lifting on data and first drafts; I make every judgement and every decision.
+
+## About me
+
+- I'm based in Australia and work in financial services.
+- I'm drawn to the analytical side of investing: valuation, research, analysis and forecasting.
+- I invest for the medium to long term. Short-term moves are mostly noise and hard to predict.
+- I'm comfortable taking risk, and I'm here to learn. When I get things wrong, I'll write about it.
+- Everything here is my personal view. It's general information only, not financial advice.
+
+## How I invest
+
+- **Top down, then bottom up.** I start with the macro backdrop, then look for companies that fit it.
+- **Valuation first.** Every position gets a DCF with bear, base and bull scenarios, cross-checked against peers. I publish the model.
+- **US first, Australia second.** The US is the deepest and most accessible market for me. The ASX has pockets of opportunity because smaller companies get far less attention. China is a strong economy, but capital controls, policy risk and language barriers make it hard to invest in directly.
+- **Smaller over bigger, where valuation allows.** Many large caps look expensive to me, partly because index concentration has pushed so much money into the same names. Smaller companies offer more room for mispricing and higher potential returns, with more risk.
+
+## Where we are
+
+**Bond yields are at multi-decade highs almost everywhere.** Government bond yields are the baseline every valuation is measured against. When they rise, future earnings are worth less today, and the hit is biggest for companies whose value sits far in the future.
+
+<ChartFigure
+  svg={Yields}
+  label="Bar chart of 10-year government bond yields, September 2026: Australia 5.40%, UK 5.25%, US 5.10%, Germany 3.38%, Japan 3.08%, each at a multi-decade high."
+  columns={['Country', '10-year yield (%)', 'Context']}
+  rows={[
+    ['Australia', '5.40', 'Highest since 2011'],
+    ['UK', '5.25', 'Highest since 2008'],
+    ['US', '5.10', 'Highest in 19 years'],
+    ['Germany', '3.38', 'Highest since 2011'],
+    ['Japan', '3.08', 'Highest since 1996'],
+  ]}
+/>
+
+The drivers are heavy government borrowing, an oil shock that has reignited inflation, and central banks expected to stay tighter for longer. In Japan, the 10-year yield has passed 3% for the first time since 1996. That makes it less attractive to borrow in yen to invest abroad, a trade that has quietly supported global markets for years. The yen is still weak, so this is a risk that's building, not one that has broken yet.
+
+**Central banks are hiking again.** The Fed raised rates on 16 September to 3.75–4.00%, its first hike since 2023. The RBA is at 4.35% after three hikes this year, and markets price a fourth for 29 September. Inflation is proving hard to control: Australian headline inflation was 3.6% in July.
+
+<ChartFigure
+  svg={PolicyRates}
+  label="Bar chart of policy rates today and my expected peak by 2027: RBA cash rate 4.35% today, 5.10% expected peak; Fed funds upper bound 4.00% today, 4.50% expected peak, against the Fed's own median projection of 4.1%."
+  columns={['Policy rate', 'Today (%)', 'My expected peak by 2027 (%)']}
+  rows={[
+    ['RBA cash rate', '4.35', '5.10'],
+    ['Fed funds (upper bound)', '4.00', '4.50'],
+  ]}
+/>
+
+**The Middle East remains the main source of inflation risk.** Markets have learned to live with the conflict, but renewed US–Iran strikes pushed oil back above US$100 a barrel this month. Talks on a phased deal are the main thing holding it back.
+
+**AI is absorbing an enormous share of the world's capital.** Microsoft, Alphabet, Amazon and Meta are guiding to about US$730bn of capex this year, with projections above US$930bn for 2027. AI companies' borrowing is now large enough to push up long-term bond yields alongside governments'. AI and governments are competing for the same pool of capital.
+
+<ChartFigure
+  svg={Capex}
+  label="Bar chart of combined capex for Microsoft, Alphabet, Amazon and Meta: US$226bn in 2024, US$410bn in 2025, US$732bn guided for 2026 and US$934bn projected for 2027."
+  columns={['Year', 'Capex (US$bn)', 'Basis']}
+  rows={[
+    ['2024', '226', 'Reported'],
+    ['2025', '410', 'Reported'],
+    ['2026', '732', 'Company guidance'],
+    ['2027', '934', 'Projection'],
+  ]}
+/>
+
+**Stocks are priced for a lot to go right.** The gap between what US stocks earn and what 10-year Treasuries pay has compressed to historic lows. Bonds are now a genuine alternative to equities for the first time in years.
+
+**The world is fragmenting.** Globalisation is giving way to national priorities, trade wars and industrial policy, with the US on one side and much of the rest of the world on the other. The result is higher costs, more supply-chain duplication and more government spending, all of which keep inflation and borrowing elevated.
+
+## My outlook
+
+**Short term, to the end of 2027: cautious.** I expect two more Fed hikes and three more RBA hikes. In Australia, I think property, jobs and inflation will weaken enough for the RBA to start cutting around mid-to-late 2027. My US view is more hawkish than the Fed's own median projection of 4.1% at the end of 2027.
+
+Most importantly, I don't think equities have priced this in. At today's bond yields, my valuation models put most AI leaders below their current share prices. The market is accepting a thin return premium over bonds, which leaves little cushion if growth slows.
+
+| Scenario | Probability | What happens | Equities |
+|---|---|---|---|
+| **Bear:** the bond rout bites | 35% | Yields keep rising, hikes go further, the yen carry trade unwinds, AI spending pauses | Fall 20%+ |
+| **Base:** higher for longer, then relief | 45% | Fed +2, RBA +3; growth slows; earnings grow but valuations compress; RBA cuts from mid-to-late 2027 | Choppy, with a 10–15% pullback along the way |
+| **Bull:** soft landing | 20% | A US–Iran deal lowers oil, inflation eases, hikes end early, AI earnings keep beating | Keep rising |
+
+**Medium term, three to five years: constructive, especially on AI.** I use AI every day, including to build this site and its models, and the productivity gains are real. I think there's still room to grow at current valuations for companies turning that into earnings now.
+
+**What would change my mind on AI:** hyperscalers cutting capex guidance, AI revenue failing to keep pace with the spending, or GPU rental prices falling sharply.
+
+## What this means for my portfolio
+
+**I'm starting in cash.** I'll deploy it in thirds as these conditions are met:
+
+1. The Fed and RBA signal the end of their hiking cycles.
+2. Bond yields stabilise: the US 10-year yield back below 4.75%.
+3. Equities re-price: the S&P 500 10% or more below its peak.
+
+Individual stocks can trigger earlier if they reach my entry levels. For example, TSMC at or below about US$420.
+
+Cash counts in my performance from day one. The clock starts when the money lands, not when I make my first trade.
+
+**What I'm looking for:** AI exposure with earnings I can see now rather than a decade away, and less-covered small and mid caps in the US and on the ASX.
+
+## Sources
+
+- Federal Reserve, FOMC statement and projections, 16 Sep 2026
+- Trading Economics, Australian and Japanese 10-year yields and RBA pricing, Sep 2026
+- CNBC, global bond yields, 1–24 Sep 2026
+- State Street Global Advisors, "Mind on the Market", 17 Sep 2026
+- I/O Fund (FactSet, Goldman Sachs Research), hyperscaler capex, Aug 2026
+- ValueAdd VC, hyperscaler capex 2024–2025, Jun–Aug 2026
+
+*General information only. This isn't financial advice and doesn't consider your objectives, financial situation or needs.*

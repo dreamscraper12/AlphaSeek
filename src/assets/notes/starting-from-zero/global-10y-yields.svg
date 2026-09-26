@@ -1,0 +1,222 @@
+<svg stroke-linejoin="round" stroke-linecap="butt" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 576 302.4" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <g>
+  <g>
+   <path d="M 0 302.4 
+L 576 302.4 
+L 576 0 
+L 0 0 
+z
+" style="fill: var(--bg)"/>
+  </g>
+  <g>
+   <g>
+    <path d="M 37.2 264.124 
+L 564.12 264.124 
+L 564.12 27.96 
+L 37.2 27.96 
+z
+" style="fill: var(--bg)"/>
+   </g>
+   <g>
+    <g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="92.391225" y="275.982281" transform="rotate(-0 92.391225 275.982281)">Australia</text>
+     </g>
+    </g>
+    <g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="196.525613" y="275.982281" transform="rotate(-0 196.525613 275.982281)">UK</text>
+     </g>
+    </g>
+    <g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="300.66" y="275.982281" transform="rotate(-0 300.66 275.982281)">US</text>
+     </g>
+    </g>
+    <g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="404.794387" y="275.982281" transform="rotate(-0 404.794387 275.982281)">Germany</text>
+     </g>
+    </g>
+    <g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="508.928775" y="275.982281" transform="rotate(-0 508.928775 275.982281)">Japan</text>
+     </g>
+    </g>
+   </g>
+   <g>
+    <g>
+     <g>
+      <path d="M 37.2 264.124 
+L 564.12 264.124 
+" clip-path="url(#p5f8631ed8c)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="268.303141" transform="rotate(-0 33.7 268.303141)">0</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 226.033032 
+L 564.12 226.033032 
+" clip-path="url(#p5f8631ed8c)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="230.212173" transform="rotate(-0 33.7 230.212173)">1</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 187.942065 
+L 564.12 187.942065 
+" clip-path="url(#p5f8631ed8c)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="192.121205" transform="rotate(-0 33.7 192.121205)">2</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 149.851097 
+L 564.12 149.851097 
+" clip-path="url(#p5f8631ed8c)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="154.030237" transform="rotate(-0 33.7 154.030237)">3</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 111.760129 
+L 564.12 111.760129 
+" clip-path="url(#p5f8631ed8c)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="115.93927" transform="rotate(-0 33.7 115.93927)">4</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 73.669161 
+L 564.12 73.669161 
+" clip-path="url(#p5f8631ed8c)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="77.848302" transform="rotate(-0 33.7 77.848302)">5</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 35.578194 
+L 564.12 35.578194 
+" clip-path="url(#p5f8631ed8c)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="39.757334" transform="rotate(-0 33.7 39.757334)">6</text>
+     </g>
+    </g>
+    <g>
+     <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="20.413594" y="146.042" transform="rotate(-90 20.413594 146.042)">10-year government bond yield (%)</text>
+    </g>
+   </g>
+   <g>
+    <path d="M 61.150909 264.124 
+L 123.631542 264.124 
+L 123.631542 58.432774 
+L 61.150909 58.432774 
+z
+" clip-path="url(#p5f8631ed8c)" style="fill: var(--muted)"/>
+   </g>
+   <g>
+    <path d="M 165.285296 264.124 
+L 227.765929 264.124 
+L 227.765929 64.146419 
+L 165.285296 64.146419 
+z
+" clip-path="url(#p5f8631ed8c)" style="fill: var(--muted)"/>
+   </g>
+   <g>
+    <path d="M 269.419684 264.124 
+L 331.900316 264.124 
+L 331.900316 69.860065 
+L 269.419684 69.860065 
+z
+" clip-path="url(#p5f8631ed8c)" style="fill: var(--muted)"/>
+   </g>
+   <g>
+    <path d="M 373.554071 264.124 
+L 436.034704 264.124 
+L 436.034704 135.376529 
+L 373.554071 135.376529 
+z
+" clip-path="url(#p5f8631ed8c)" style="fill: var(--muted)"/>
+   </g>
+   <g>
+    <path d="M 477.688458 264.124 
+L 540.169091 264.124 
+L 540.169091 146.803819 
+L 477.688458 146.803819 
+z
+" clip-path="url(#p5f8631ed8c)" style="fill: var(--muted)"/>
+   </g>
+   <g>
+    <path d="M 37.2 264.124 
+L 564.12 264.124 
+" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="92.391225" y="54.623677" transform="rotate(-0 92.391225 54.623677)">5.40%</text>
+   </g>
+   <g>
+    <text style="font-size: 8.5px; fill: var(--bg)" transform="translate(94.736694 201.596942) rotate(-90)">highest since 2011</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="196.525613" y="60.337323" transform="rotate(-0 196.525613 60.337323)">5.25%</text>
+   </g>
+   <g>
+    <text style="font-size: 8.5px; fill: var(--bg)" transform="translate(198.871081 204.453764) rotate(-90)">highest since 2008</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="300.66" y="66.050968" transform="rotate(-0 300.66 66.050968)">5.10%</text>
+   </g>
+   <g>
+    <text style="font-size: 8.5px; fill: var(--bg)" transform="translate(303.005469 207.783399) rotate(-90)">highest in 19 years</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="404.794387" y="131.567432" transform="rotate(-0 404.794387 131.567432)">3.38%</text>
+   </g>
+   <g>
+    <text style="font-size: 8.5px; fill: var(--bg)" transform="translate(407.139856 240.068819) rotate(-90)">highest since 2011</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="508.928775" y="142.994723" transform="rotate(-0 508.928775 142.994723)">3.08%</text>
+   </g>
+   <g>
+    <text style="font-size: 8.5px; fill: var(--bg)" transform="translate(511.274243 245.782464) rotate(-90)">highest since 1996</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 13px; text-anchor: start; fill: var(--ink)" x="37.2" y="21.96" transform="rotate(-0 37.2 21.96)">Global 10-year yields are at multi-decade highs</text>
+   </g>
+  </g>
+  <g>
+   <text style="font-size: 8.5px; text-anchor: start; fill: var(--muted)" x="5.76" y="299.376" transform="rotate(-0 5.76 299.376)">Latest available, September 2026. Sources: Trading Economics, CNBC.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p5f8631ed8c">
+   <rect x="37.2" y="27.96" width="526.92" height="236.164"/>
+  </clipPath>
+ </defs>
+</svg>

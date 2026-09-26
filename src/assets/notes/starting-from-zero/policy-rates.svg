@@ -1,0 +1,221 @@
+<svg stroke-linejoin="round" stroke-linecap="butt" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 576 316.8" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <g>
+  <g>
+   <path d="M 0 316.8 
+L 576 316.8 
+L 576 0 
+L 0 0 
+z
+" style="fill: var(--bg)"/>
+  </g>
+  <g>
+   <g>
+    <path d="M 37.2 265.276 
+L 564.12 265.276 
+L 564.12 27.96 
+L 37.2 27.96 
+z
+" style="fill: var(--bg)"/>
+   </g>
+   <g>
+    <g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="166.241633" y="277.134281" transform="rotate(-0 166.241633 277.134281)">RBA cash rate</text>
+     </g>
+    </g>
+    <g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="381.31102" y="277.134281" transform="rotate(-0 381.31102 277.134281)">Fed funds (upper bound)</text>
+     </g>
+    </g>
+   </g>
+   <g>
+    <g>
+     <g>
+      <path d="M 37.2 265.276 
+L 564.12 265.276 
+" clip-path="url(#p5214a8a3b8)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="269.455141" transform="rotate(-0 33.7 269.455141)">0</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 229.31903 
+L 564.12 229.31903 
+" clip-path="url(#p5214a8a3b8)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="233.498171" transform="rotate(-0 33.7 233.498171)">1</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 193.362061 
+L 564.12 193.362061 
+" clip-path="url(#p5214a8a3b8)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="197.541201" transform="rotate(-0 33.7 197.541201)">2</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 157.405091 
+L 564.12 157.405091 
+" clip-path="url(#p5214a8a3b8)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="161.584232" transform="rotate(-0 33.7 161.584232)">3</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 121.448121 
+L 564.12 121.448121 
+" clip-path="url(#p5214a8a3b8)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="125.627262" transform="rotate(-0 33.7 125.627262)">4</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 85.491152 
+L 564.12 85.491152 
+" clip-path="url(#p5214a8a3b8)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="89.670292" transform="rotate(-0 33.7 89.670292)">5</text>
+     </g>
+    </g>
+    <g>
+     <g>
+      <path d="M 37.2 49.534182 
+L 564.12 49.534182 
+" clip-path="url(#p5214a8a3b8)" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linecap: square"/>
+     </g>
+     <g/>
+     <g>
+      <text style="font-size: 11px; text-anchor: end; fill: var(--muted)" x="33.7" y="53.713322" transform="rotate(-0 33.7 53.713322)">6</text>
+     </g>
+    </g>
+    <g>
+     <text style="font-size: 11px; text-anchor: middle; fill: var(--muted)" x="20.413594" y="146.618" transform="rotate(-90 20.413594 146.618)">Policy rate (%)</text>
+    </g>
+   </g>
+   <g>
+    <path d="M 101.720816 265.276 
+L 166.241633 265.276 
+L 166.241633 108.863182 
+L 101.720816 108.863182 
+z
+" clip-path="url(#p5214a8a3b8)" style="fill: var(--chart-secondary)"/>
+   </g>
+   <g>
+    <path d="M 316.790204 265.276 
+L 381.31102 265.276 
+L 381.31102 121.448121 
+L 316.790204 121.448121 
+z
+" clip-path="url(#p5214a8a3b8)" style="fill: var(--chart-secondary)"/>
+   </g>
+   <g>
+    <path d="M 166.241633 265.276 
+L 230.762449 265.276 
+L 230.762449 81.895455 
+L 166.241633 81.895455 
+z
+" clip-path="url(#p5214a8a3b8)" style="fill: var(--accent)"/>
+   </g>
+   <g>
+    <path d="M 381.31102 265.276 
+L 445.831837 265.276 
+L 445.831837 103.469636 
+L 381.31102 103.469636 
+z
+" clip-path="url(#p5214a8a3b8)" style="fill: var(--accent)"/>
+   </g>
+   <g>
+    <path d="M 456.585306 117.852424 
+" clip-path="url(#p5214a8a3b8)" style="fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-linecap: square"/>
+    <defs>
+     <path id="m398bec053e" d="M 11 0 
+L -11 -0 
+" style="stroke: var(--muted); stroke-width: 2"/>
+    </defs>
+    <g clip-path="url(#p5214a8a3b8)">
+     <use xlink:href="#m398bec053e" x="456.585306" y="117.852424" style="fill: var(--muted); stroke: var(--muted); stroke-width: 2"/>
+    </g>
+   </g>
+   <g>
+    <path d="M 37.2 265.276 
+L 564.12 265.276 
+" style="fill: none; stroke: var(--rule); stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="133.981224" y="105.267485" transform="rotate(-0 133.981224 105.267485)">4.35%</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="349.050612" y="117.852424" transform="rotate(-0 349.050612 117.852424)">4.00%</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="198.502041" y="78.299758" transform="rotate(-0 198.502041 78.299758)">5.10%</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 11px; text-anchor: middle; fill: var(--ink)" x="413.571429" y="99.873939" transform="rotate(-0 413.571429 99.873939)">4.50%</text>
+   </g>
+   <g>
+    <text style="font-size: 8.5px; fill: var(--muted)" transform="translate(471.640163 115.438823)">Fed's own median</text>
+    <text style="font-size: 8.5px; fill: var(--muted)" transform="translate(471.640163 124.956963)">projection: 4.1%</text>
+   </g>
+   <g>
+    <text style="font-weight: 700; font-size: 13px; text-anchor: start; fill: var(--ink)" x="37.2" y="21.96" transform="rotate(-0 37.2 21.96)">I expect three more RBA hikes and two more Fed hikes</text>
+   </g>
+   <g>
+    <g>
+     <path d="M 47.1 46.218281 
+L 69.1 46.218281 
+L 69.1 38.518281 
+L 47.1 38.518281 
+z
+" style="fill: var(--chart-secondary)"/>
+    </g>
+    <g>
+     <text style="font-size: 11px; text-anchor: start; fill: var(--ink)" x="77.9" y="46.218281" transform="rotate(-0 77.9 46.218281)">Today</text>
+    </g>
+    <g>
+     <path d="M 131.714063 46.218281 
+L 153.714063 46.218281 
+L 153.714063 38.518281 
+L 131.714063 38.518281 
+z
+" style="fill: var(--accent)"/>
+    </g>
+    <g>
+     <text style="font-size: 11px; text-anchor: start; fill: var(--ink)" x="162.514063" y="46.218281" transform="rotate(-0 162.514063 46.218281)">My expected peak (by 2027)</text>
+    </g>
+   </g>
+  </g>
+  <g>
+   <text style="font-size: 8.5px; text-anchor: start; fill: var(--muted)" x="5.76" y="302.544" transform="rotate(-0 5.76 302.544)">Today: RBA 4.35%; Fed 3.75–4.00% after the 16 Sep 2026 hike.</text>
+  </g>
+  <g>
+   <text style="font-size: 8.5px; text-anchor: start; fill: var(--muted)" x="5.76" y="313.632" transform="rotate(-0 5.76 313.632)">Sources: Federal Reserve (statement and projections), Trading Economics.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p5214a8a3b8">
+   <rect x="37.2" y="27.96" width="526.92" height="237.316"/>
+  </clipPath>
+ </defs>
+</svg>
