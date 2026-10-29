@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -118,7 +119,23 @@ def _run_build(ledger_dir: Path, cache_dir: Path, generated_dir: Path, benchmark
     return 0
 
 
+def _load_env_file(path: Path = Path(".env")) -> None:
+    """Load KEY=value lines from .env into the environment, so a local
+    `portfolio build` finds the API key the way CI finds it in a secret.
+    Real environment variables win, so CI's secret is never shadowed, and
+    nothing read here is ever printed (ground rule 7)."""
+    if not path.exists():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        os.environ.setdefault(key.strip(), value.strip())
+
+
 def main() -> None:
+    _load_env_file()
     parser = argparse.ArgumentParser(prog="portfolio")
     parser.add_argument(
         "--ledger-dir", type=Path, default=Path("data/ledger"), help="path to the CSV ledger"
