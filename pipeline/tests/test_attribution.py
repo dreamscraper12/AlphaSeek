@@ -111,3 +111,36 @@ def test_cumulative_contribution_sums_across_days():
     assert cumulative_contribution(rows, "TEST:AAA") == Decimal("0.03")
     assert cumulative_contribution(rows, CASH_AND_FX_LINE) == Decimal("-0.001")
     assert cumulative_contribution(rows, "TEST:ZZZ") == Decimal("0")
+
+
+def test_weekend_trade_is_attributed_as_a_purchase_not_as_appearing_from_nowhere():
+    # 2026-01-02 is a Friday, 2026-01-03 the Saturday, 2026-01-05 the Monday.
+    # A Friday US session is Saturday morning in Sydney, so this is the normal
+    # case for a US trade, not an edge case.
+    ledger = _ledger(
+        trades=[_trade(executed_at="2026-01-03T00:53:00+11:00", quantity=Decimal("10"), price=Decimal("100"))],
+        cashflows=[
+            Cashflow(date=date(2026, 1, 2), type="DEPOSIT", amount=Decimal("10000.00"), currency="AUD"),
+            Cashflow(date=date(2026, 1, 2), type="DEPOSIT", amount=Decimal("2000.00"), currency="USD"),
+        ],
+    )
+    prices = _FixedPriceSource({("TEST:AAA", date(2026, 1, 5)): Decimal("110")})
+    fx = _FixedFxSource(Decimal("1.5"))
+
+    nav_series = build_nav_series(ledger, date(2026, 1, 5), prices, fx)
+    rows = build_attribution(ledger, nav_series, fx)
+
+    nav_friday = nav_series[0].nav_aud
+    assert nav_friday == Decimal("13000.00")  # 10000 AUD + 2000 USD at 1.5
+
+    monday = next(r for r in rows if r.date == date(2026, 1, 5) and r.instrument_id == "TEST:AAA")
+    # The position is worth 1650 AUD, but 1500 of that is the money that
+    # bought it. Only the 150 AUD of price gain is a contribution.
+    assert monday.contribution == Decimal("150") / nav_friday
+
+    cash = next(r for r in rows if r.date == date(2026, 1, 5) and r.instrument_id == CASH_AND_FX_LINE)
+    assert cash.contribution == Decimal(0)
+
+    total = sum((r.contribution for r in rows if r.date == date(2026, 1, 5)), Decimal(0))
+    expected_r = daily_return(nav_series[-1].nav_aud, nav_friday, external_flow_aud(ledger, date(2026, 1, 5), fx, after=date(2026, 1, 2)))
+    assert abs(total - expected_r) < Decimal("1E-20")

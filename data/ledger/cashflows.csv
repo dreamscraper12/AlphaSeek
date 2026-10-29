@@ -1,1 +1,3 @@
 date,type,amount,currency,instrument_id,memo
+2026-10-23,DEPOSIT,3706.64,AUD,,Opening cash at inception
+2026-10-23,DEPOSIT,10.93,USD,,Opening cash at inception

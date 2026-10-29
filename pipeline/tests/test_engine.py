@@ -154,3 +154,35 @@ def test_weekends_are_not_valued():
     dates = [p.date for p in series]
     assert dates == [date(2026, 1, 5), date(2026, 1, 6), date(2026, 1, 7), date(2026, 1, 8), date(2026, 1, 9)]
     assert all(p.index == Decimal("10000") for p in series)  # cash only, nothing ever moves
+
+
+# 2026-01-02 is a Friday, 2026-01-10 a Saturday, 2026-01-12 the Monday after.
+# A US session traded from Sydney lands on a Saturday local date routinely, so
+# activity dated on a non-valuation day must not be lost.
+def test_weekend_deposit_is_not_mistaken_for_a_gain():
+    ledger = _ledger(
+        cashflows=[
+            Cashflow(date=date(2026, 1, 2), type="DEPOSIT", amount=Decimal("10000.00"), currency="AUD"),
+            Cashflow(date=date(2026, 1, 10), type="DEPOSIT", amount=Decimal("5000.00"), currency="AUD"),
+        ]
+    )
+    series = build_nav_series(ledger, date(2026, 1, 12), _FixedPriceSource({}), _FixedFxSource())
+
+    by_date = {p.date: p for p in series}
+    assert by_date[date(2026, 1, 12)].nav_aud == Decimal("15000.00")
+    # Cash only, so nothing earned anything: the Saturday deposit must be
+    # netted out of Monday's return, not booked as a 50% gain.
+    assert by_date[date(2026, 1, 12)].index == Decimal("10000")
+
+
+def test_weekend_flow_window_does_not_double_count_on_later_days():
+    ledger = _ledger(
+        cashflows=[
+            Cashflow(date=date(2026, 1, 2), type="DEPOSIT", amount=Decimal("10000.00"), currency="AUD"),
+            Cashflow(date=date(2026, 1, 10), type="DEPOSIT", amount=Decimal("5000.00"), currency="AUD"),
+        ]
+    )
+    series = build_nav_series(ledger, date(2026, 1, 13), _FixedPriceSource({}), _FixedFxSource())
+    # Tuesday must see no flow at all — the Saturday one belonged to Monday.
+    assert series[-1].date == date(2026, 1, 13)
+    assert series[-1].index == Decimal("10000")

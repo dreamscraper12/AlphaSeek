@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "trade_id": "T1",
+    "executed_at": "2026-10-24T00:53:37+11:00",
+    "instrument_id": "NYSE:TSM",
+    "side": "BUY",
+    "quantity": 6.0,
+    "price": 418.34,
+    "currency": "USD",
+    "note_slug": null
+  }
+]

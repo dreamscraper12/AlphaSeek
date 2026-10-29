@@ -95,13 +95,30 @@ def shadow_benchmark_series(
     day zero's return as NAV_D0 / deposit - 1, not the general same-day
     formula."""
     index_by_date = {p.date: p.index for p in benchmark_series}
+    ordered_dates = [p.date for p in benchmark_series]
+
+    def entry_index(flow_date: date) -> Decimal | None:
+        """The index level a flow buys in at. A flow dated on a day with no
+        valuation point — a weekend, which is where a US session traded from
+        Sydney lands — buys in at the next valuation day instead of raising."""
+        if flow_date == inception_date:
+            return INCEPTION_INDEX
+        if flow_date in index_by_date:
+            return index_by_date[flow_date]
+        for d in ordered_dates:
+            if d >= flow_date:
+                return index_by_date[d]
+        return None
+
     points: list[ShadowPoint] = []
     for point in benchmark_series:
         value = Decimal(0)
         for flow_date, amount in flows_by_date.items():
             if flow_date > point.date:
                 continue
-            base_index = INCEPTION_INDEX if flow_date == inception_date else index_by_date[flow_date]
+            base_index = entry_index(flow_date)
+            if base_index is None:
+                continue
             value += amount * (point.index / base_index)
         points.append(ShadowPoint(date=point.date, value_aud=value))
     return points

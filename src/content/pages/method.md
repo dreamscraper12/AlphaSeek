@@ -20,7 +20,7 @@ I review every position after each earnings report against the conditions in its
 
 ## Performance methodology
 
-**Starting point.** The portfolio starts with A$10,000 on 25 Sep 2026. The benchmark starts with the same A$10,000 on the same day.
+**Starting point.** The portfolio opened on 23 Oct 2026. Committed capital is A$10,000, deposited as positions are taken. The benchmark receives the same deposits on the same days, so both are measured on identical cash flows.
 
 **Value.** Each business day, the portfolio is worth the market value of every holding plus cash in every currency, converted to Australian dollars.
 

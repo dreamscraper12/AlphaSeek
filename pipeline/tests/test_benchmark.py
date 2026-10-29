@@ -98,3 +98,23 @@ def test_shadow_benchmark_later_flow_lands_at_end_of_day_with_no_same_day_return
     # Inception leg grows to 11000; the new 1000 arrives at Jan 6's own
     # close, so it contributes exactly 1000, not 1000 scaled by a return.
     assert shadow[1].value_aud == Decimal("12000")
+
+
+def test_shadow_benchmark_handles_a_flow_dated_on_a_non_valuation_day():
+    from portfolio.metrics import IndexPoint
+
+    # 2026-01-03 is a Saturday, so it has no benchmark point. Previously this
+    # raised KeyError and took the whole build down.
+    benchmark_series = [
+        IndexPoint(date(2026, 1, 2), Decimal("10000")),
+        IndexPoint(date(2026, 1, 5), Decimal("11000")),
+    ]
+    flows = {date(2026, 1, 2): Decimal("10000"), date(2026, 1, 3): Decimal("1000")}
+
+    shadow = shadow_benchmark_series(flows, benchmark_series, inception_date=date(2026, 1, 2))
+
+    # Friday: only the inception deposit exists yet.
+    assert shadow[0].value_aud == Decimal("10000")
+    # Monday: the inception leg grew to 11000, and the Saturday flow buys in
+    # at Monday's level, so it contributes exactly its 1000.
+    assert shadow[1].value_aud == Decimal("12000")

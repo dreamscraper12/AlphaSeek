@@ -5,7 +5,7 @@ return history the site is built around. See CLAUDE.md section 9."""
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 from decimal import Decimal
 
 from portfolio.calendar_days import business_days
@@ -50,15 +50,27 @@ def inception_deposit_aud(ledger: Ledger, fx_source: FxRateSource) -> Decimal | 
     return total
 
 
-def external_flow_aud(ledger: Ledger, as_of: date, fx_source: FxRateSource) -> Decimal:
-    """Net deposits minus withdrawals on exactly this date, converted to AUD."""
+def external_flow_aud(
+    ledger: Ledger, as_of: date, fx_source: FxRateSource, after: date | None = None
+) -> Decimal:
+    """Net deposits minus withdrawals credited to this valuation day, in AUD.
+
+    Weekends and holidays carry no valuation points (CLAUDE.md section 8), so
+    a flow dated on one belongs to the next valuation day rather than being
+    dropped — which matters here, because a US session traded from Sydney
+    routinely settles to a Saturday local date. `after` is the previous
+    valuation day, making the window (after, as_of]; without it only `as_of`
+    itself counts. Each flow converts at the rate on its own date."""
+    start_exclusive = after if after is not None else as_of - timedelta(days=1)
     total = Decimal(0)
     for c in ledger.cashflows:
-        if c.date != as_of or c.type not in ("DEPOSIT", "WITHDRAWAL"):
+        if c.type not in ("DEPOSIT", "WITHDRAWAL"):
             continue
-        rate = rate_with_carry_forward(fx_source, c.currency, "AUD", as_of)
+        if not start_exclusive < c.date <= as_of:
+            continue
+        rate = rate_with_carry_forward(fx_source, c.currency, "AUD", c.date)
         if rate is None:
-            raise ValueError(f"missing FX rate {c.currency}->AUD on {as_of}, no fallback available")
+            raise ValueError(f"missing FX rate {c.currency}->AUD on {c.date}, no fallback available")
         total += (c.amount if c.type == "DEPOSIT" else -c.amount) * rate
     return total
 
@@ -84,12 +96,17 @@ def build_nav_series(
     previous_nav = inception_deposit_aud(ledger, fx_source)
 
     rows: list[tuple[date, DailyValuation, Decimal]] = []
+    previous_day = start
     for d in business_days(start, as_of):
         valuation = value_day(ledger, d, price_source, fx_source)
-        flow = Decimal(0) if d == start else external_flow_aud(ledger, d, fx_source)
+        # Day zero's deposit is already the baseline above, so it isn't also
+        # a same-day flow. Later days take every flow since the previous
+        # valuation day, so weekend-dated ones aren't lost.
+        flow = Decimal(0) if d == start else external_flow_aud(ledger, d, fx_source, after=previous_day)
         r = daily_return(valuation.nav_aud, previous_nav, flow)
         rows.append((d, valuation, r))
         previous_nav = valuation.nav_aud
+        previous_day = d
 
     indices = chain_link([r for _, _, r in rows])
     return [

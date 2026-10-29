@@ -20,7 +20,7 @@ from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
 
-from portfolio.engine import NavPoint
+from portfolio.engine import NavPoint, external_flow_aud
 from portfolio.fx import rate_with_carry_forward
 from portfolio.ledger import Ledger
 from portfolio.sources import FxRateSource
@@ -46,53 +46,56 @@ def daily_contribution(
 
 
 def _net_purchases_by_instrument(
-    ledger: Ledger, as_of: date, fx_source: FxRateSource
+    ledger: Ledger, as_of: date, fx_source: FxRateSource, after: date
 ) -> dict[str, Decimal]:
     """Positive for a BUY (money moving into the position from cash),
     negative for a SELL — mirrors external flows, but between an
-    instrument and cash rather than between the portfolio and the owner."""
+    instrument and cash rather than between the portfolio and the owner.
+
+    Covers every trade in (after, as_of], not just those dated as_of:
+    weekends carry no valuation points, and a US session traded from Sydney
+    routinely settles to a Saturday local date, so an exact-date match would
+    never see those trades and attribution would read the whole position as
+    if it had appeared from nowhere."""
     instruments_by_id = {i.instrument_id: i for i in ledger.instruments}
     result: dict[str, Decimal] = {}
     for t in ledger.trades:
-        if t.executed_at.date() != as_of:
+        if not after < t.executed_at.date() <= as_of:
             continue
         instrument = instruments_by_id[t.instrument_id]
         multiplier = instrument.multiplier if instrument.type == "option" else Decimal(1)
-        rate = rate_with_carry_forward(fx_source, instrument.currency, "AUD", as_of)
+        trade_date = t.executed_at.date()
+        rate = rate_with_carry_forward(fx_source, instrument.currency, "AUD", trade_date)
         if rate is None:
-            raise ValueError(f"missing FX rate {instrument.currency}->AUD on {as_of}, no fallback available")
+            raise ValueError(
+                f"missing FX rate {instrument.currency}->AUD on {trade_date}, no fallback available"
+            )
         cost_aud = t.quantity * t.price * multiplier * rate
         signed = cost_aud if t.side == "BUY" else -cost_aud
         result[t.instrument_id] = result.get(t.instrument_id, Decimal(0)) + signed
     return result
 
 
-def _income_by_instrument(ledger: Ledger, as_of: date, fx_source: FxRateSource) -> dict[str, Decimal]:
+def _income_by_instrument(
+    ledger: Ledger, as_of: date, fx_source: FxRateSource, after: date
+) -> dict[str, Decimal]:
     """Dividends (and withholding tax against them) attributed back to the
     instrument that paid them, since that cash has already left the
-    instrument's own market value by the time it reaches the cash bucket."""
+    instrument's own market value by the time it reaches the cash bucket.
+    Windowed like net purchases, so income dated on a non-valuation day
+    lands on the next valuation day instead of being dropped."""
     result: dict[str, Decimal] = {}
     for c in ledger.cashflows:
-        if c.date != as_of or c.instrument_id is None or c.type not in ("DIVIDEND", "WITHHOLDING_TAX"):
+        if c.instrument_id is None or c.type not in ("DIVIDEND", "WITHHOLDING_TAX"):
             continue
-        rate = rate_with_carry_forward(fx_source, c.currency, "AUD", as_of)
+        if not after < c.date <= as_of:
+            continue
+        rate = rate_with_carry_forward(fx_source, c.currency, "AUD", c.date)
         if rate is None:
-            raise ValueError(f"missing FX rate {c.currency}->AUD on {as_of}, no fallback available")
+            raise ValueError(f"missing FX rate {c.currency}->AUD on {c.date}, no fallback available")
         signed = c.amount if c.type == "DIVIDEND" else -c.amount
         result[c.instrument_id] = result.get(c.instrument_id, Decimal(0)) + signed * rate
     return result
-
-
-def _external_flow_aud(ledger: Ledger, as_of: date, fx_source: FxRateSource) -> Decimal:
-    total = Decimal(0)
-    for c in ledger.cashflows:
-        if c.date != as_of or c.type not in ("DEPOSIT", "WITHDRAWAL"):
-            continue
-        rate = rate_with_carry_forward(fx_source, c.currency, "AUD", as_of)
-        if rate is None:
-            raise ValueError(f"missing FX rate {c.currency}->AUD on {as_of}, no fallback available")
-        total += (c.amount if c.type == "DEPOSIT" else -c.amount) * rate
-    return total
 
 
 def build_attribution(
@@ -109,8 +112,9 @@ def build_attribution(
         mv_today_by_id = {p.instrument_id: p.market_value_aud for p in curr.valuation.positions}
         instrument_ids = set(mv_yesterday_by_id) | set(mv_today_by_id)
 
-        net_purchases = _net_purchases_by_instrument(ledger, d, fx_source)
-        income = _income_by_instrument(ledger, d, fx_source)
+        since = prev.date
+        net_purchases = _net_purchases_by_instrument(ledger, d, fx_source, after=since)
+        income = _income_by_instrument(ledger, d, fx_source, after=since)
 
         for instrument_id in instrument_ids:
             contribution = daily_contribution(
@@ -122,7 +126,7 @@ def build_attribution(
             )
             rows.append(Contribution(date=d, instrument_id=instrument_id, contribution=contribution))
 
-        external_flow = _external_flow_aud(ledger, d, fx_source)
+        external_flow = external_flow_aud(ledger, d, fx_source, after=since)
         cash_net_transfers = (
             external_flow - sum(net_purchases.values(), Decimal(0)) + sum(income.values(), Decimal(0))
         )

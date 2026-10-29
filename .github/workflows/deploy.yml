@@ -6,6 +6,13 @@ name: Deploy site
 on:
   push:
     branches: [master]
+  # daily.yml commits with the default GITHUB_TOKEN, and GitHub does not
+  # trigger workflows from those pushes — so a valuation would commit and
+  # never publish. This starts the deploy explicitly instead (CLAUDE.md
+  # section 10).
+  workflow_run:
+    workflows: ["Daily valuation"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -21,6 +28,11 @@ concurrency:
 
 jobs:
   build:
+    # On a workflow_run trigger, only publish if the valuation actually
+    # succeeded; types: [completed] fires on failure too.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

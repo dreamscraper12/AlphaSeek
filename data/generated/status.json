@@ -1,8 +1,11 @@
 {
-  "last_valuation_date": null,
-  "inception_date": null,
-  "inception_deposit": null,
+  "last_valuation_date": "2026-10-28",
+  "inception_date": "2026-10-23",
+  "inception_deposit": 3722.20432,
   "stale_prices": [],
   "warnings": [],
-  "cash_by_currency": {}
+  "cash_by_currency": {
+    "USD": 0.0,
+    "AUD": 148.72
+  }
 }
