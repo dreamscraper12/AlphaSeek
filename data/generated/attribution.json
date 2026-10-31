@@ -38,5 +38,15 @@
     "date": "2026-10-29",
     "instrument_id": "CASH_AND_FX",
     "contribution": 0.0
+  },
+  {
+    "date": "2026-10-30",
+    "instrument_id": "NYSE:TSM",
+    "contribution": -0.05703825283842427
+  },
+  {
+    "date": "2026-10-30",
+    "instrument_id": "CASH_AND_FX",
+    "contribution": 0.0
   }
 ]
