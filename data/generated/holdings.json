@@ -2,12 +2,12 @@
   {
     "instrument_id": "NYSE:TSM",
     "type": "equity",
-    "weight": 0.9589909731602738,
+    "weight": 0.9579122500694942,
     "average_cost": 595.71616,
-    "price": 579.633105681,
-    "price_as_of": "2026-11-03",
-    "return": -0.026997847966722943,
-    "contribution": -0.023681790496249844,
+    "price": 564.141625,
+    "price_as_of": "2026-11-04",
+    "return": -0.05300264978542801,
+    "contribution": -0.0493121245616437,
     "note_slug": null
   }
 ]
