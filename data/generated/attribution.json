@@ -148,5 +148,15 @@
     "date": "2026-11-13",
     "instrument_id": "CASH_AND_FX",
     "contribution": 0.0
+  },
+  {
+    "date": "2026-11-16",
+    "instrument_id": "NYSE:TSM",
+    "contribution": -0.05705466944634451
+  },
+  {
+    "date": "2026-11-16",
+    "instrument_id": "CASH_AND_FX",
+    "contribution": 0.0
   }
 ]
