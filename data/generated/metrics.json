@@ -1,39 +1,39 @@
 {
   "portfolio": {
     "returns": {
-      "1M": -0.06911179749530784,
-      "3M": -0.06911179749530784,
-      "YTD": -0.06911179749530784,
-      "1Y": -0.06911179749530784,
-      "since_inception": -0.06911179749530784
+      "1M": -0.09915577337248375,
+      "3M": -0.09915577337248375,
+      "YTD": -0.09915577337248375,
+      "1Y": -0.09915577337248375,
+      "since_inception": -0.09915577337248375
     },
     "annualised_return": null,
-    "annualised_volatility": 0.657049264131243,
+    "annualised_volatility": 0.6471514052692818,
     "max_drawdown": {
       "peak_date": "2026-10-28",
       "trough_date": "2026-11-05",
       "drawdown": -0.18551809259767277
     },
-    "current_drawdown": -0.11117497836081659,
+    "current_drawdown": -0.13986138499622927,
     "beta": null,
     "correlation": null,
-    "excess_return": -0.08962391203275277
+    "excess_return": -0.10686502447380535
   },
   "benchmark": {
     "returns": {
-      "1M": 0.020512114537444934,
-      "3M": 0.020512114537444934,
-      "YTD": 0.020512114537444934,
-      "1Y": 0.020512114537444934,
-      "since_inception": 0.020512114537444934
+      "1M": 0.007709251101321586,
+      "3M": 0.007709251101321586,
+      "YTD": 0.007709251101321586,
+      "1Y": 0.007709251101321586,
+      "since_inception": 0.007709251101321586
     },
     "annualised_return": null,
-    "annualised_volatility": 0.15057454860947753,
+    "annualised_volatility": 0.15431242542265478,
     "max_drawdown": {
       "peak_date": "2026-10-28",
       "trough_date": "2026-11-06",
       "drawdown": -0.028078345432132584
     },
-    "current_drawdown": -0.001885014137606032
+    "current_drawdown": -0.014406893765988959
   }
 }
