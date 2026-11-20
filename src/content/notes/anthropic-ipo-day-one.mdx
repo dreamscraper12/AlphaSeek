@@ -1,0 +1,199 @@
+---
+title: "Anthropic IPO: a one-day trade, not an investment"
+published_at: 2026-11-20T18:00:00+11:00
+type: post
+summary: "I took an IPO allocation in Anthropic and sold it on day one. Why I traded it, why one day, and why I'm not holding."
+ai:
+  used_for: [gathering IPO and comparable-listing data, summarising the S-1, first-draft DCF and relative valuation, first draft]
+  human: [the decision to subscribe, the holding period, the exit, the view on fundamentals, valuation inputs]
+---
+
+import ChartFigure from '../../components/ChartFigure.astro';
+import { url as siteUrl } from '../../lib/url';
+import DayOne from '../../assets/notes/anthropic-ipo-day-one/day-one.svg';
+import Intraday from '../../assets/notes/anthropic-ipo-day-one/intraday.svg';
+import WeekOne from '../../assets/notes/anthropic-ipo-day-one/week-one.svg';
+import RevenueCompute from '../../assets/notes/anthropic-ipo-day-one/revenue-compute.svg';
+import NetLoss from '../../assets/notes/anthropic-ipo-day-one/net-loss.svg';
+import Commitments from '../../assets/notes/anthropic-ipo-day-one/commitments.svg';
+import Valuation from '../../assets/notes/anthropic-ipo-day-one/valuation.svg';
+
+## Summary
+
+I applied for A$10,000 of Anthropic's IPO, was allocated 11 shares at US$83 and sold them on the first trading day at US$97.61. That's 17.6% a share, or 16.2% (A$222) after commission and currency. This was a short-term alpha trade to lift portfolio returns. It was never a long-term position: the portfolio already carries heavy AI exposure through TSMC.
+
+## The trade
+
+| | |
+|---|---|
+| Applied for | A$10,000 |
+| Allocated | 11 shares, about 13.7% of my application |
+| Cost | US$913.00 at the US$83.00 IPO price (A$1,371.05) |
+| Sold | 11 shares at US$97.6135, 2:37pm New York time, 19 Nov 2026 |
+| Gain per share | +17.6% |
+| Commission | A$7.51 |
+| Gain after commission and FX | +A$222.38 (+16.2%) |
+
+Full figures are in the journal and the public ledger.
+
+## Why not hold it
+
+I already own TSMC, which makes the chips Anthropic's compute partners run on. Adding Anthropic long term would stack a second, larger bet on the same AI build-out. In a portfolio this concentrated, that's too much of one theme.
+
+## Why the day-one pop
+
+Large, high-profile IPOs are usually priced to leave something on the table. The question was whether that still held for a deal this size.
+
+<ChartFigure
+  svg={DayOne}
+  label="Bar chart of day-one returns for seven large IPOs. From IPO price to close: Anthropic +17.1%, Cerebras +68.1%, Alibaba +38.1%, Arm +24.7%, SpaceX +19.2%, SK hynix +12.8%, Facebook +0.6%. From open to close: Anthropic −12.9%, Cerebras −11.1%, Alibaba +1.3%, Arm +13.4%, SpaceX +7.3%, SK hynix −1.2%, Facebook −9.1%."
+  columns={['IPO', 'Date', 'IPO price (US$)', 'Open (US$)', 'Day-one close (US$)', 'IPO to close', 'Open to close']}
+  rows={[
+    ['Anthropic', '19 Nov 2026', '83.00', '111.50', '97.17', '+17.1%', '−12.9%'],
+    ['SpaceX', '12 Jun 2026', '135.00', '150.00', '160.95', '+19.2%', '+7.3%'],
+    ['SK hynix (ADR)', '10 Jul 2026', '149.00', '170.00', '168.01', '+12.8%', '−1.2%'],
+    ['Cerebras', '14 May 2026', '185.00', '350.00', '311.07', '+68.1%', '−11.1%'],
+    ['Arm', '14 Sep 2023', '51.00', '56.10', '63.59', '+24.7%', '+13.4%'],
+    ['Alibaba', '19 Sep 2014', '68.00', '92.70', '93.89', '+38.1%', '+1.3%'],
+    ['Facebook', '18 May 2012', '38.00', '42.05', '38.23', '+0.6%', '−9.1%'],
+  ]}
+/>
+
+What this tells me:
+
+- **The allocation is where the edge is.** Every one of these closed day one above its IPO price. The median gain was 19.2%.
+- **Buying at the open is not.** Four of seven closed below their opening price. Anthropic gave back 12.9% from its first trade.
+- **Hot deals fade fast intraday.** Anthropic opened at US$111.50 just before noon, hit US$115.10 within minutes, then fell to around US$95 within half an hour. It spent the afternoon between about US$93 and US$98. Even its low of US$92.72 was 11.7% above the IPO price.
+
+<ChartFigure
+  svg={Intraday}
+  label="Line chart of Anthropic's first day of trading. It opened at US$111.50 just before noon New York time, hit a high of US$115.10, fell to about US$95 by 12:25, traded between about US$93 and US$98 in the afternoon, and closed at US$97.17. The IPO price was US$83 and I sold at US$97.61 at 2:37pm."
+  columns={['Point', 'Time (New York)', 'US$']}
+  rows={[
+    ['IPO price', '', '83.00'],
+    ['Open', 'Just before noon', '111.50'],
+    ['High', 'Minutes after the open', '115.10'],
+    ['Low point after the fade', 'About 12:25pm', 'About 95'],
+    ['Afternoon range', '1pm to 4pm', 'About 93 to 98'],
+    ['Low of the day', '', '92.72'],
+    ['My sale', '2:37pm', '97.61'],
+    ['Close', '4pm', '97.17'],
+  ]}
+/>
+
+- **This deal was priced to pop.** Anthropic set its range at US$70–78, about 20% below the valuation talk, then priced above it at US$83. Only about 6% of the company was offered, and index funds were due to buy within 5 to 15 days.
+
+## Why one day, not one week
+
+Week one has paid more for some recent mega IPOs, but the spread is much wider:
+
+<ChartFigure
+  svg={WeekOne}
+  label="Slope chart indexed to IPO price equals 100. SpaceX went from 119 at the day-one close to 150 on day 3 (+25.4%). SK hynix went from 113 to 130 on day 3 (+15.4%). Cerebras went from 168 to about 151 on day 2 (about −10%). Arm went from 125 to 102 by the end of week one (−18.0%). Anthropic closed day one at 117; I sold that afternoon."
+  columns={['IPO', 'Day-one close (US$)', 'Later in week one (US$)', 'Change from day-one close']}
+  rows={[
+    ['SpaceX', '160.95', '201.80 (day 3)', '+25.4%'],
+    ['SK hynix', '168.01', '193.92 (day 3)', '+15.4%'],
+    ['Cerebras', '311.07', 'About 280 (day 2)', 'About −10%'],
+    ['Arm', '63.59', '52.16 (end of week one)', '−18.0%'],
+  ]}
+/>
+
+SpaceX and SK hynix rallied when options trading opened and index buying began. Cerebras and Arm gave back much of their pop. This week, all three of this year's biggest IPOs before Anthropic traded below their first trade.
+
+I chose one day because AI stocks are unusually volatile right now. Nvidia's CEO left on 12 Nov in a scandal tied to chip sales into China, and chip stocks swung hard: AMD rose about 6% that day, then fell almost 9% the next. On Anthropic's debut, the Nasdaq fell 2.25%. Holding for index and options flows was a bet that the market would stay calm for a week. I didn't want that risk for a few extra points.
+
+## Fundamentals at a glance
+
+Not a full valuation, since this was a short-term trade. My read of the S-1:
+
+- **Revenue is growing exponentially.** US$4.7bn in Q1, US$11.6bn in Q2 and US$17.0bn in Q3 2026, up 1,127% on Q3 2025.
+- **Most of the loss is accounting.** Of the US$104bn nine-month net loss, US$94bn (91%) is the change in fair value of convertible notes and similar instruments, which rises with the company's valuation. The nine-month operating loss was US$1.3bn.
+- **Cash flow and balance sheet are solid.** Operating cash flow was +US$6.6bn over nine months. Liquidity was US$146.6bn at 30 Sep.
+- **Customers keep expanding.** Net revenue retention (NRR) is about 900%, meaning existing customers spend roughly nine times more than a year ago. Customers spending US$100,000+ a year rose from about 950 to more than 11,900.
+- **The product is good.** I use Claude every day, including to build this site. That's a personal view, not data.
+
+<ChartFigure
+  svg={RevenueCompute}
+  label="Bar chart of quarterly revenue against compute and infrastructure cost, US$ billions. Revenue: 0.4, 0.8, 1.4, 2.0, 4.7, 11.6 and 17.0 from Q1 2025 to Q3 2026. Compute: 0.9, 1.4, 2.0, 2.9, 3.4, 5.6 and about 9.8. Revenue overtook compute in Q1 2026."
+  columns={['Quarter', 'Revenue (US$bn)', 'Compute and infrastructure (US$bn)']}
+  rows={[
+    ['Q1 2025', '0.38', '0.94'],
+    ['Q2 2025', '0.79', '1.39'],
+    ['Q3 2025', '1.38', '2.05'],
+    ['Q4 2025', '2.04', '2.95'],
+    ['Q1 2026', '4.73', '3.39'],
+    ['Q2 2026', '11.56', '5.56'],
+    ['Q3 2026', '17.0', 'About 9.8 (derived)'],
+  ]}
+/>
+
+<ChartFigure
+  svg={NetLoss}
+  label="Stacked bar of the nine-month 2026 net loss of US$104 billion: US$94 billion (91%) is the fair-value change on convertible notes and similar instruments; US$10 billion is everything else."
+  columns={['Component', 'US$bn', 'Share']}
+  rows={[
+    ['Fair-value change on convertible notes and similar', '94', '91%'],
+    ['Everything else (incl. 1.3 operating loss)', '10', '9%'],
+    ['Net loss, nine months to 30 Sep 2026', '104', '100%'],
+  ]}
+/>
+
+Losses are expected at this stage. The cost of compute to support this growth is enormous.
+
+## What worried me
+
+- **US$900bn of compute commitments.** Purchase and lease commitments total about US$900bn, mostly for compute and data centres, running to 2045. Around US$70bn falls due in the next 12 months.
+- **Revenue isn't locked in.** About 80% of revenue is usage-based, and customers can cut usage with little notice. If demand slows, the commitments stay.
+- **Margins slipped in Q3.** Compute costs grew 77% quarter on quarter against 47% revenue growth, and the company swung back to a small operating loss.
+- **An AI downturn.** If data-centre spending pauses, a company that has pre-committed this much is exposed.
+
+<ChartFigure
+  svg={Commitments}
+  label="Bar chart in US$ billions: Q3 2026 revenue annualised about 68; commitments due in the next 12 months about 70; total commitments to 2045 about 900."
+  columns={['Item', 'US$bn']}
+  rows={[
+    ['Revenue, Q3 2026 annualised', 'About 68'],
+    ['Commitments due in next 12 months', 'About 70'],
+    ['Total commitments, to 2045', 'About 900'],
+  ]}
+/>
+
+## What I think it's worth
+
+I built a quick DCF (discounted cash flow) and a relative valuation to check whether holding made sense. <a href={siteUrl('/models/anthropic-ant-2026-11.xlsx')}>Download the model (Excel)</a>.
+
+<ChartFigure
+  svg={Valuation}
+  label="Range chart in US$ per share. DCF: bear 18, base 66, bull 144, probability-weighted 70. Relative valuation: bear 38, base 56, bull 94, weighted 59. Reference lines at the IPO price of 83 and my sale at 97.61."
+  columns={['US$ per share', 'Bear (25%)', 'Base (55%)', 'Bull (20%)', 'Weighted']}
+  rows={[
+    ['DCF', '18.35', '65.55', '144.49', '69.54'],
+    ['Relative valuation', '38.18', '56.16', '94.49', '59.33'],
+  ]}
+/>
+
+- **DCF base case:** revenue reaches about US$355bn by 2030, with a 28% operating margin from 2031. The WACC (weighted average cost of capital) is 11.1%.
+- **Relative valuation:** I applied 15x annualised Q3 revenue, the median for listed AI companies. At US$83, Anthropic was priced at 22x.
+- **Blended:** about US$64 a share, about 34% below where I sold.
+
+The range is wide. A 1% change in WACC moves the base case between US$57 and US$77. On my numbers, the day-one price ran ahead of the value. That's one more reason I sold on day one instead of holding.
+
+## Disclosure
+
+I used Claude, Anthropic's own AI, to help research and draft this post. I checked the figures against the sources below, but you should weigh that conflict.
+
+## Sources
+
+- Anthropic, PBC, Form S-1 and amendments, 26 Oct to 17 Nov 2026
+- CNBC, NBC News and FinanceFeeds, Anthropic debut coverage, 19 Nov 2026
+- Nasdaq, Motley Fool, TechCrunch, SpaceX debut coverage, Jun 2026
+- Leverage Shares, "SpaceX stock after its IPO", Nov 2026
+- Financial News (Korea), EBC, SK hynix ADR debut and week one, Jul 2026
+- Morningstar, Crunchbase, Yahoo Finance, Cerebras debut coverage, May 2026
+- Fortune and Reuters, Arm debut, Sep 2023; Stocktwits, mega-IPO comparison, Nov 2026
+- Reuters, Motley Fool, Nvidia and AMD, Nov 2026
+- Sacra, The Register, Unite.AI, TechCrunch, S-1 analysis, Oct to Nov 2026
+- Allocations, "Anthropic quarterly revenue: what the S-1 shows" (S-1 quarterly table), Nov 2026
+
+*The above reflects my personal views and opinions. This isn't financial advice.*
