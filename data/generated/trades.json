@@ -1,5 +1,25 @@
 [
   {
+    "trade_id": "T3",
+    "executed_at": "2026-11-20T06:37:00+11:00",
+    "instrument_id": "NASDAQ:ANT",
+    "side": "SELL",
+    "quantity": 11.0,
+    "price": 97.6135,
+    "currency": "USD",
+    "note_slug": "anthropic-ipo-day-one"
+  },
+  {
+    "trade_id": "T2",
+    "executed_at": "2026-11-20T03:55:00+11:00",
+    "instrument_id": "NASDAQ:ANT",
+    "side": "BUY",
+    "quantity": 11.0,
+    "price": 83.0,
+    "currency": "USD",
+    "note_slug": "anthropic-ipo-day-one"
+  },
+  {
     "trade_id": "T1",
     "executed_at": "2026-10-24T00:53:37+11:00",
     "instrument_id": "NYSE:TSM",

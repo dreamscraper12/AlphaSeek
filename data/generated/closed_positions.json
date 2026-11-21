@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "instrument_id": "NASDAQ:ANT",
+    "type": "equity",
+    "realised_pnl": 241.1548997,
+    "note_slug": "anthropic-ipo-day-one"
+  }
+]
