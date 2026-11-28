@@ -1,10 +1,8 @@
 {
-  "last_valuation_date": "2026-11-26",
+  "last_valuation_date": "2026-11-27",
   "inception_date": "2026-10-23",
   "inception_deposit": 3722.20432,
-  "stale_prices": [
-    "NYSE:TSM"
-  ],
+  "stale_prices": [],
   "warnings": [],
   "cash_by_currency": {
     "USD": 1073.7485,
